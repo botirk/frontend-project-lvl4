@@ -9,21 +9,19 @@ import Index from './Index.jsx';
 import Login from './Login.jsx';
 import Code404 from './Code404.jsx';
 
-export default () => {
+const checkLogin = (option) => () => (localStorage.getItem('JWT') === null) ? <Redirect to="/login" /> : option;
+
+const App = () => {
   return <Router>
   <Switch>
-    <Route path="/login">
-      <Login />
-    </Route>
-    <Route path="/">
-      <Index />
-    </Route>
-    <Route path="/404">
-      <Code404 />
-    </Route>
+    <Route exact path="/" render={checkLogin(<Index />)} />
+    <Route path="/login"><Login /></Route>
+    <Route path="/404" render={checkLogin(<Code404 />)} />
     <Route path="*">
       <Redirect to="/404" />
     </Route>
   </Switch>
-  </Router>;
+  </Router>
 };
+
+export default App;
