@@ -6,11 +6,22 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
 class Login extends React.Component {
+  static setJWT = (value) => {
+    localStorage.setItem('JWT', JSON.stringify(value));
+  }
+  static getJWT = () => {
+    const result = localStorage.getItem('JWT');
+    if (result === null) throw new Error('no JWT');
+    return JSON.parse(result);
+  }
+  static removeJWT = () => localStorage.removeItem('JWT');
+  static isThereJWT = () => localStorage.getItem('JWT') !== null;
+
   onSubmit = async (values, actions) => {
     try {
       const result = await axios.post('/api/v1/login', values);
       //console.log(result);
-      localStorage.setItem('JWT', JSON.stringify(result.data));
+      Login.setJWT(result.data);
       this.props.history.push('/');
     } catch (e) {
       console.error(e);

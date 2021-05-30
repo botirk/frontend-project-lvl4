@@ -9,7 +9,7 @@ import Index from './Index.jsx';
 import Login from './Login.jsx';
 import Code404 from './Code404.jsx';
 
-const checkLogin = (option) => () => (localStorage.getItem('JWT') === null) ? <Redirect to="/login" /> : option;
+const checkLogin = (option) => () => (Login.isThereJWT() === false) ? <Redirect to="/login" /> : option;
 
 const App = () => {
   return <Router>
