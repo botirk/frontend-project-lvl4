@@ -1,15 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
+import * as channelsActions from '../slices/channels.js';
 
 const slice = createSlice({
   name: 'currentChannelId',
-  initialState: -1,
+  initialState: {id: -1, wait: undefined },
   reducers: {
     set(state, action) {
-      return action.payload.currentChannelId;
+      state.id = action.payload;
     },
-    reset: () => -1,
+    wait(state, action) {
+      state.wait = action.payload;
+    },
+    reset: () => ({id: -1, wait: undefined }),
+  },
+  extraReducers: {
+    [channelsActions.add]: (state, action) => {
+      const channel = action.payload;
+      if (channel.name !== state.wait) return;
+      state.id = channel.id;
+      state.wait = undefined;
+    },
   },
 })
 
-export const { set, reset } = slice.actions;
+export const { set, wait, reset } = slice.actions;
 export default slice.reducer;

@@ -14,7 +14,9 @@ const slice = createSlice({
       return result;
     },
     add(state, action) {
-      //todo
+      const channel = action.payload;
+      state.byId[channel.id] = channel;
+      state.allIds.push(channel.id);
     },
     reset: () => ({byId:{}, allIds:[]}),
   },
