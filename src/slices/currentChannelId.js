@@ -20,6 +20,10 @@ const slice = createSlice({
       state.id = channel.id;
       state.wait = undefined;
     },
+    [channelsActions.remove]: (state, action) => {
+      const id = action.payload.id;
+      if (id === state.id) state.id = 1;
+    },
   },
 })
 

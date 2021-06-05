@@ -102,7 +102,7 @@ class Login extends React.Component {
           <div className="col-sm-4">{this.renderForm()}</div>
         </div>
       </div>
-    </div>;
+    </div>
   }
 }
 

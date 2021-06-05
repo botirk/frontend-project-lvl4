@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import * as channelsAction from './channels.js';
+import _ from 'lodash';
+import * as channelsActions from './channels.js';
 
 const slice = createSlice({
   name: 'messages',
@@ -7,8 +8,9 @@ const slice = createSlice({
   reducers: {
     init(state, action) {
       //console.log(state, action);
+      const { messages } = action.payload;
       const result = {byId:{}, byChannelId:{}, allIds:[]};
-      action.payload.messages.forEach((message) => {
+      messages.forEach((message) => {
         result.byId[message.id] = message;
         result.byChannelId[message.channelId] = result.byChannelId[message.channelId] ?? [];
         result.byChannelId[message.channelId].push(message);
@@ -25,6 +27,18 @@ const slice = createSlice({
     },
     reset: () => ({byId:{}, byChannelId:{}, allIds:[]}),
   },
+  extraReducers: {
+    [channelsActions.remove]: (state, action) => {
+      const channelId = action.payload.id;
+      const messagesIds = state.byChannelId[channelId];
+      // first
+      state.byId = _.omit(state.byId, messagesIds);
+      // second
+      delete state.byChannelId[channelId];
+      // third
+      state.allIds = state.allIds.filter((id) => messagesIds.includes(id) === false);
+    },
+  }
 })
 
 export const { init, add, reset } = slice.actions;

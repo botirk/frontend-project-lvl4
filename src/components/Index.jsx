@@ -2,10 +2,10 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Container, Row, Col, ListGroup, Form, Button, Modal } from 'react-bootstrap';
+import { Container, Row, Col, ListGroup, Form, Button, Modal, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { io } from 'socket.io-client';
 
-import Login from './Login';
+import Login from './Login.js';
 import * as channelsActions from '../slices/channels.js';
 import * as currentChannelIdActions from '../slices/currentChannelId.js';
 import * as messagesActions from '../slices/messages.js';
@@ -19,7 +19,8 @@ const mapStateToProps = (state) => ({
 class Index extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { addChannelModal: false }
+    this.state = { addChannelModal: false, removeChannelMoadal: false }
+    this.addChannelModalRef = React.createRef();
   }
   initSocket() {
     try {
@@ -30,6 +31,8 @@ class Index extends React.Component {
         (message) => this.props.dispatch(messagesActions.add(message)));
       this.socket.on('newChannel',
         (channel) => this.props.dispatch(channelsActions.add(channel)));
+      this.socket.on('removeChannel',
+        (channel) => this.props.dispatch(channelsActions.remove(channel)));
       this.socket.onAny((...args) => console.log('this.socket.onAny',args));
     } catch (e) {
       if (this.isAuthFail(e)) this.onAuthFail();
@@ -67,7 +70,7 @@ class Index extends React.Component {
     dummyMessages.forEach((message) => this.props.dispatch(messagesActions.add(message)));
   }
   manageError(e) {
-    if (this.isAuthFail(e)) this.onAuthFail();
+    if (this.isAuthFail(e)) this.onAuthFail(e);
     else console.error(e);
   }
   async fetchAndFillStore() {
@@ -134,8 +137,8 @@ class Index extends React.Component {
     e.preventDefault();
     const formData = new FormData(e.target);
     const name = formData.get('input').trim();
-    if (name.length === 0) {
-      alert('Нельзя добавить безымянный канал');
+    if (name.length === 0 || name.length > 10) {
+      alert('Название канала должно содержать от 1 до 10 символов');
       return;
     }
     if (this.props.channels.allIds.find((id) => this.props.channels.byId[id].name === name) !== undefined) {
@@ -151,8 +154,16 @@ class Index extends React.Component {
       this.props.dispatch(currentChannelIdActions.wait(name));
     } catch(e) {
       this.manageError(e);
-    } finally {
-      this.setState({ addChannelModal: false });
+    }
+  }
+  onRemoveChannel = (id) => {
+    try {
+      this.socket.emit('removeChannel', { id }, (response) => {
+        if (response.status !== 'ok')
+          throw new Error(`Server acknowledge was not expected:  ${response.status}`);
+      });
+    } catch(e) {
+      this.manageError(e);
     }
   }
   // GUI
@@ -162,8 +173,11 @@ class Index extends React.Component {
         <Modal.Title>Добавление канала</Modal.Title>
       </Modal.Header>
       <Modal.Footer>
-        <Form onSubmit={this.onSubmitNewChannel} style={{ width: '100%'}} inline>
-          <Form.Control name="input" type="text" placeholder="Название канала" style={{ width: '20rem'}} />
+        <Form onSubmit={(e) => {
+            this.onSubmitNewChannel(e);
+            this.setState({ addChannelModal: false });
+          }} style={{ width: '100%'}} inline>
+          <Form.Control ref={this.addChannelModalRef} name="input" type="text" placeholder="Название канала" style={{ width: '20rem'}} />
           &nbsp;
           <Button variant="primary" type="submit">Добавить канал</Button>
         </Form>
@@ -171,9 +185,18 @@ class Index extends React.Component {
     </Modal>
   }
   renderAddChannelButton() {
-    return <ListGroup.Item onClick={() => this.setState({ addChannelModal: true })} action variant="primary">
-      +
-    </ListGroup.Item>
+    const style = { display: "flex" };
+    const child = { flex: '1 1 auto' };
+    const onClick = () => {
+      this.setState({ addChannelModal: true });
+      setTimeout(() => this.addChannelModalRef.current.focus(), 1);
+    }
+
+    return (<div style={style}>
+      <Button style={child}  variant="info" onClick={onClick}>
+        +
+      </Button>
+    </div>)
   }
   renderAddChannel() {
     return <>
@@ -181,21 +204,68 @@ class Index extends React.Component {
       {this.renderAddChannelModal(this.state.addChannelModal)}
     </>
   }
-  renderChannel(channel) {
+  renderChannelUnremovable(channel) {
     const active = (channel.id === this.props.currentChannelId.id);
-    if (active) 
-      return <ListGroup.Item key={channel.id} active>
+    const variant = (active) ? "success" : "primary";
+    const style = { display: "flex" };
+    const child = { flex: '1 1 auto', whiteSpace: "nowrap" };
+
+    return <div key={channel.id} style={style}>
+      <Button key={channel.id} onClick={this.onChannelClick(channel.id)} variant={variant} style={child}>
         {channel.name}
-      </ListGroup.Item>
+      </Button>
+    </div>
+  }
+  renderChannelRemovableRemoveModal(channel, isShown) {
+    return (<>
+      <Modal show={isShown} onHide={() => this.setState({ removeChannelModal: false })}>
+        <Modal.Header closeButton>
+          <Modal.Title>Удалить канал</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Уверены?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => this.setState({ removeChannelModal: false })}>
+            Отменить
+          </Button>
+          <Button variant="danger" onClick={(e) => {
+            this.onRemoveChannel(channel.id);
+            this.setState({ removeChannelModal: false });
+          }}>
+            Удалить
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>);
+  }
+  renderChannelRemovable(channel) {
+    const active = (channel.id === this.props.currentChannelId.id);
+    const variant = (active) ? "success" : "primary";
+    const style = { display: "flex" };
+    const child = { flex: '1 1 auto', maxWidth: "80%", whiteSpace: "nowrap" };
     
-    const onClick = this.onChannelClick(channel.id);
-    return <ListGroup.Item key={channel.id} onClick={onClick} action variant="light">{channel.name}</ListGroup.Item>
+    return (<Dropdown key={channel.id} as={ButtonGroup} style={style}>
+      <Button onClick={this.onChannelClick(channel.id)} variant={variant} style={child}>
+        {channel.name}
+      </Button>
+      <Dropdown.Toggle variant={variant} split />
+      <Dropdown.Menu>
+        <Dropdown.Item onClick={() => this.setState({ removeChannelModal: true })}>Удалить</Dropdown.Item>
+        {this.renderChannelRemovableRemoveModal(channel, this.state.removeChannelModal)}
+        <Dropdown.Item>Переименовать</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>)
+  }
+  renderChannel(channel) {
+    if (channel.removable === true) 
+      return this.renderChannelRemovable(channel);
+    else 
+      return this.renderChannelUnremovable(channel);
   }
   renderChannels(channels) {
-    return <ListGroup>
+    return <>
       {this.renderAddChannel()}
       {channels.allIds.map((id) => this.renderChannel(channels.byId[id]))}
-    </ListGroup>
+    </>
   }
   renderInput() {
     const formStyle = {  position: 'absolute', bottom: '1rem', left: '8,35%', width: '100%' }
@@ -203,7 +273,7 @@ class Index extends React.Component {
     const buttonStyle = {  width: '15%' }
 
     return <Form onSubmit={this.onSubmitNewMessage} style={formStyle} inline>
-      <Form.Control style={controlStyle} name="input" type="text" placeholder="Сообщение" />
+      <Form.Control autoFocus={true} style={controlStyle} name="input" type="text" placeholder="Сообщение" />
       &nbsp;
       <Button style={buttonStyle} variant="primary" type="submit">Отправить</Button>
     </Form>

@@ -18,9 +18,14 @@ const slice = createSlice({
       state.byId[channel.id] = channel;
       state.allIds.push(channel.id);
     },
+    remove(state, action) {
+      const id = action.payload.id;
+      delete state.byId[id];
+      state.allIds = state.allIds.filter((usedId) => usedId !== id);
+    },
     reset: () => ({byId:{}, allIds:[]}),
   },
 })
 
-export const { init, add, reset } = slice.actions;
+export const { init, add, remove, reset } = slice.actions;
 export default slice.reducer;
