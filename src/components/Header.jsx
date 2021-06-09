@@ -23,7 +23,7 @@ export default () => {
   return (
     <Navbar bg="light">
       <Navbar.Brand>
-        <Link to="/">Hexlet-Chat</Link>
+        <Link to="/">Hexlet Chat</Link>
       </Navbar.Brand>
       <LogoutButton history={history} />
     </Navbar>
