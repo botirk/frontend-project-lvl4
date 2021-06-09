@@ -29,6 +29,7 @@ export default {
     channelNameShouldContainFrom1to10Symbols: 'Имя канала должно составлять от 1 до 10 символов',
     cancel: 'Отменить',
     suchChannelAlreadyExists: 'Такой канал уже существует',
+    cantSendEmptyMessages :'Нельзя отправлять пустые сообщения',
   },
 };
 

@@ -21,16 +21,16 @@ const onSubmit = (history) => async (values, actions) => {
     const message = e.message.toLowerCase();
     if (message.includes('409') === true) {
       actions.setFieldError('username', i18n.t('nickTaken'));
-      alert(i18n.t('nickTaken'));
+      if (alert) alert(i18n.t('nickTaken'));
     } else if (message.includes('network') === true) {
       actions.setFieldError('username', i18n.t('authNetoworkError'));
       actions.setFieldError('password', i18n.t('authNetoworkError'));
-      alert(i18n.t('authNetoworkError'));
+      if (alert) alert(i18n.t('authNetoworkError'));
     } else {
       console.error(e);
       actions.setFieldError('username', i18n.t('wrongLoginPassword'));
       actions.setFieldError('password', i18n.t('wrongLoginPassword'));
-      alert(i18n.t('wrongLoginPassword'));
+      if (alert) alert(i18n.t('wrongLoginPassword'));
     }
   }
 };

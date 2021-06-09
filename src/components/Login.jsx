@@ -21,11 +21,11 @@ const onSubmit = (history) => async (values, actions) => {
     if (e.message.toLowerCase().includes('network') === true) {
       actions.setFieldError('username', i18n.t('networkErrorAfterAuth'));
       actions.setFieldError('password', i18n.t('networkErrorAfterAuth'));
-      alert(i18n.t('networkErrorAfterAuth'));
+      if (alert) alert(i18n.t('networkErrorAfterAuth'));
     } else {
       actions.setFieldError('username', i18n.t('failedLoginPassword'));
       actions.setFieldError('password', i18n.t('failedLoginPassword'));
-      alert(i18n.t('failedLoginPassword'));
+      if (alert) alert(i18n.t('failedLoginPassword'));
     }
   }
 };

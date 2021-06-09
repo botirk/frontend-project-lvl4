@@ -14,11 +14,11 @@ const onChannelRename = (e, channel, channels) => {
   const formData = new FormData(e.target);
   const name = formData.get('input').trim();
   if (name.length === 0 || name.length > 10) {
-    alert(i18n.t('channelNameShouldContainFrom1to10Symbols'));
+    if (alert) alert(i18n.t('channelNameShouldContainFrom1to10Symbols'));
     return true;
   }
   if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
-    alert(`${name}: ${i18n.t('suchChannelAlreadyExists')}`);
+    if (alert) alert(`${name}: ${i18n.t('suchChannelAlreadyExists')}`);
     return true;
   }
   e.target.reset();

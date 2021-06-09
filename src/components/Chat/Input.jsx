@@ -10,7 +10,7 @@ const onSubmitNewMessage = (currentChannelId) => (e) => {
   const formData = new FormData(e.target);
   const body = formData.get('input').trim();
   if (body.length === 0) {
-    alert('Нельзя отправлять пустые сообщения');
+    if (alert) alert(i18n('cantSendEmptyMessages'));
     return;
   }
   e.target.reset(); // document.getElementsByName('input')[0].value = '';
