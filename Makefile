@@ -18,6 +18,9 @@ build:
 lint:
 	npx eslint . --ext js,jsx
 
+lint+fix:
+	npx eslint . --ext js,jsx --fix
+
 publish:
 	npm publish
 

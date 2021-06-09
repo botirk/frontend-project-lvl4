@@ -1,9 +1,16 @@
 import { io } from 'socket.io-client';
 
-let abstraction = undefined;
+let forcedSocket;
+export const forceSocket = (socket) => {
+  forcedSocket = socket;
+  // because it lets new abstraction to be created
+  abstraction = undefined;
+};
+
+let abstraction;
 export default () => {
   if (abstraction !== undefined) return abstraction;
-  const socket = io();
+  const socket = forcedSocket ?? io();
   // abstraction functions
   abstraction = {
     newMessage(username, body, channelId) {
@@ -19,20 +26,24 @@ export default () => {
       socket.emit('removeChannel', { id });
     },
     onRemoveChannel: [],
-  }
+    renameChannel(name, id) {
+      socket.emit('renameChannel', { id, name });
+    },
+    onRenameChannel: [],
+  };
   // connecting socket with abstraction
   socket.on('newMessage',
-    ({username, body, channelId, id}) =>
-      abstraction.onNewMessage.forEach((cb) => cb(username, body, channelId, id)));
+    ({
+      username, body, channelId, id,
+    }) => abstraction.onNewMessage.forEach((cb) => cb(username, body, channelId, id)));
   socket.on('newChannel',
-    ({name, removable, id}) =>
-      abstraction.onNewChannel.forEach((cb) => cb(name, removable, id)));
+    ({ name, removable, id }) => abstraction.onNewChannel.forEach((cb) => cb(name, removable, id)));
   socket.on('removeChannel',
-    ({id}) =>
-      abstraction.onRemoveChannel.forEach((cb) => cb(id)));
+    ({ id }) => abstraction.onRemoveChannel.forEach((cb) => cb(id)));
+  socket.on('renameChannel',
+    ({ name, id }) => abstraction.onRenameChannel.forEach((cb) => cb(name, id)));
   // debugging information for socket
-  if (process.env.NODE_ENV !== 'production')
-    socket.onAny((...args) => console.log('socket.onAny',args));
+  if (process.env.NODE_ENV !== 'production') socket.onAny((...args) => console.log('socket.onAny', args));
 
   return abstraction;
-}
+};

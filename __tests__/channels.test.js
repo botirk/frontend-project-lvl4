@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @ts-check
 
 // TODO rewrite tests

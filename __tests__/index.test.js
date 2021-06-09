@@ -1,3 +1,4 @@
+/* eslint-disable */
 import buildApp from '../server/index.js';
 
 test('get /', async () => {

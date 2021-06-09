@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @ts-check
 
 import buildApp from '../server/index.js';
