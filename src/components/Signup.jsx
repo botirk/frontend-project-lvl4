@@ -60,8 +60,8 @@ const SignupInner = () => {
       }) => (
         <Form onSubmit={handleSubmit} className="p-3">
           <h1 className="text-center mb-4">{i18n.t('registration')}</h1>
-          <FormGroup>
-            <FormLabel htmlFor="username">{i18n.t('newNick')}</FormLabel>
+          <FormGroup controlId="username">
+            <FormLabel>{i18n.t('newNick')}</FormLabel>
             <FormControl
               autoFocus
               disabled={isSubmitting}
@@ -77,8 +77,8 @@ const SignupInner = () => {
               ? <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
               : null}
           </FormGroup>
-          <FormGroup>
-            <FormLabel htmlFor="password">{i18n.t('createPassword')}</FormLabel>
+          <FormGroup controlId="password">
+            <FormLabel>{i18n.t('createPassword')}</FormLabel>
             <FormControl
               disabled={isSubmitting}
               onChange={handleChange}
@@ -93,8 +93,8 @@ const SignupInner = () => {
               ? <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
               : null}
           </FormGroup>
-          <FormGroup>
-            <FormLabel htmlFor="password2">{i18n.t('repeatPassword')}</FormLabel>
+          <FormGroup controlId="password2">
+            <FormLabel>{i18n.t('repeatPassword')}</FormLabel>
             <FormControl
               disabled={isSubmitting}
               onChange={handleChange}

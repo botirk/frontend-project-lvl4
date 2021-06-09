@@ -55,8 +55,8 @@ const LoginInner = () => {
           <h1 className="text-center mb-4">
             {i18n.t('login')}
           </h1>
-          <FormGroup>
-            <FormLabel htmlFor="username">
+          <FormGroup controlId="username">
+            <FormLabel>
               {i18n.t('yourNick')}
             </FormLabel>
             <FormControl
@@ -78,8 +78,8 @@ const LoginInner = () => {
               )
               : null}
           </FormGroup>
-          <FormGroup>
-            <FormLabel htmlFor="password">
+          <FormGroup controlId="password">
+            <FormLabel>
               {i18n.t('password')}
             </FormLabel>
             <FormControl
