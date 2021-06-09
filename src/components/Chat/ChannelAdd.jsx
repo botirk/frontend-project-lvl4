@@ -11,11 +11,11 @@ const onSubmitNewChannel = (e, channels, dispatch) => {
   const formData = new FormData(e.target);
   const name = formData.get('input').trim();
   if (name.length === 0 || name.length > 10) {
-    alert(i18n.t('channelNameShouldContainFrom1to10Symbols'));
+    if (alert) alert(i18n.t('channelNameShouldContainFrom1to10Symbols'));
     return true;
   }
   if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
-    alert(`${name}: ${i18n.t('suchChannelAlreadyExists')}`);
+    if (alert) alert(`${name}: ${i18n.t('suchChannelAlreadyExists')}`);
     return true;
   }
   e.target.reset();
@@ -37,6 +37,7 @@ const ChannelAddModal = ({
       <Modal.Footer>
         <Form onSubmit={(e) => setShown(onSubmitNewChannel(e, channels, dispatch))} style={{ width: '100%' }} inline>
           <Form.Control
+            data-testid="add-channel"
             ref={channelNameInputRef}
             name="input"
             type="text"
@@ -54,7 +55,6 @@ const ChannelAddButton = ({ setShown, channelNameInputRef }) => {
   const onClick = () => {
     setShown(true);
     setTimeout(() => channelNameInputRef.current.focus(), 1);
-    if (channelNameInputRef.current) { channelNameInputRef.current.dataset.testid = 'add-channel'; }
   };
 
   const style = { display: 'flex' };

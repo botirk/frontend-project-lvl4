@@ -18,7 +18,7 @@ const onChannelRename = (e, channel, channels) => {
     return true;
   }
   if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
-    if (alert) alert(`${name}: ${i18n.t('suchChannelAlreadyExists')}`);
+    alert(`${name}: ${i18n.t('suchChannelAlreadyExists')}`);
     return true;
   }
   e.target.reset();
@@ -43,6 +43,7 @@ const RemovableChannelRenameModal = ({
       <Modal.Footer>
         <Form onSubmit={(e) => setShown(onChannelRename(e, channel, channels))} style={{ width: '100%' }} inline>
           <Form.Control
+            data-testid="rename-channel"
             ref={channelRenameInputRef}
             defaultValue={channel.name}
             name="input"
@@ -98,7 +99,6 @@ const RemovableChannel = ({ dispatch, channel, active }) => {
       channelRenameInputRef.current.focus();
       channelRenameInputRef.current.select();
     }, 1);
-    if (channelRenameInputRef.current) channelRenameInputRef.current.dataset.testid = 'rename-channel';
   };
   // render
   return (

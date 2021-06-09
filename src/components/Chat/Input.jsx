@@ -26,7 +26,7 @@ const buttonStyle = { width: '15%' };
 export default ({ currentChannelId }) => (
   <Form onSubmit={onSubmitNewMessage(currentChannelId)} style={formStyle} inline>
     <Form.Control
-      ref={(input) => { if (input) input.dataset.testid = 'new-message'; }}
+      data-testid="new-message"
       autoFocus
       style={controlStyle}
       name="input"
