@@ -13,7 +13,7 @@ export default {
     password: 'Пароль',
     'noAccount?': 'Нет аккаунта?',
     registration: 'Регистрация',
-    from3SymbolsUpTo20Symbols: 'От 3 символов до 20 символов',
+    from3SymbolsUpTo20Symbols: 'От 3 до 20 символов',
     from6Symbols: 'Не менее 6 символов',
     twoPasswordMustBeSame: 'Пароли должны совпадать',
     newNick: 'Имя пользователя',

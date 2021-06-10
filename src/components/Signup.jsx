@@ -40,9 +40,9 @@ const SignupInner = () => {
     <Formik
       initialValues={{ username: '', password: '', password2: '' }}
       validationSchema={Yup.object({
-        username: Yup.string().required(i18n.t('required')).min(3).max(20, i18n.t('from3SymbolsUpTo20Symbols')),
-        password: Yup.string().required(i18n.t('required')).min(6, i18n.t('from6Symbols')),
-        password2: Yup.string().required(i18n.t('required')).min(6, i18n.t('from6Symbols'))
+        username: Yup.string().min(3, i18n.t('from3SymbolsUpTo20Symbols')).max(20, i18n.t('from3SymbolsUpTo20Symbols')),
+        password: Yup.string().min(6, i18n.t('from6Symbols')),
+        password2: Yup.string().min(6, i18n.t('from6Symbols'))
           .oneOf([Yup.ref('password'), null], i18n.t('twoPasswordMustBeSame')),
       })}
       onSubmit={onSubmit(history)}
