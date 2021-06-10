@@ -127,22 +127,16 @@ const RemovableChannel = ({ dispatch, channel, active }) => {
         onClick={onChannelClick(dispatch, channel.id, active)}
         variant={variant}
         style={child}
-      >
-        {channel.name}
-      </Button>
+      >{channel.name}</Button>
       <Dropdown.Toggle variant={variant} split />
       <Dropdown.Menu>
-        <Dropdown.Item onClick={onRemoveClick}>
-          {i18n.t('delete')}
-        </Dropdown.Item>
+        <Dropdown.Item onClick={onRemoveClick}>{i18n.t('delete')}</Dropdown.Item>
         <RemovableChannelRemoveModal
           channel={channel}
           isShown={isRemoveModalShown}
           setShown={setRemoveModalShown}
         />
-        <Dropdown.Item onClick={onRenameClick}>
-          {i18n.t('rename')}
-        </Dropdown.Item>
+        <Dropdown.Item onClick={onRenameClick}>{i18n.t('rename')}</Dropdown.Item>
         <RemovableChannelRenameModal
           channel={channel}
           isShown={isRenameModalShown}
