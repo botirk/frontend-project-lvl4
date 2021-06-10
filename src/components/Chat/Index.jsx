@@ -68,7 +68,7 @@ const Index = () => {
     <Container style={style}>
       <Header />
       <Row style={style}>
-        <Col sm={2} style={{ overflow: 'auto' }}>
+        <Col sm={2}>
           <Channels />
         </Col>
         <Col sm={10}>

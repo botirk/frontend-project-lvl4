@@ -28,14 +28,16 @@ const Channels = () => {
   return (
     <>
       <ChannelAdd channels={channels} />
-      {channels.allIds.map((id) => (
-        <Channel
-          key={id}
-          dispatch={dispatch}
-          channel={channels.byId[id]}
-          active={id === currentChannelId}
-        />
-      ))}
+      <div style={{ overflow: 'auto', maxHeight: '60vh' }}>
+        {channels.allIds.map((id) => (
+          <Channel
+            key={id}
+            dispatch={dispatch}
+            channel={channels.byId[id]}
+            active={id === currentChannelId}
+          />
+        ))}
+      </div>
     </>
   );
 };
