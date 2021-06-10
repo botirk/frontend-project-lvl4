@@ -21,8 +21,8 @@ const onSubmitNewChannel = (channels, dispatch, setShown) => async (values, acti
   dispatch(currentChannelIdActions.wait(name));
   socketAbstraction().newChannel(name);
   setShown(false);
-  actions.resetForm();
-}
+  // actions.resetForm();
+};
 
 const ChannelAddModal = ({
   channels, isShown, setShown, channelNameInputRef,
@@ -71,8 +71,8 @@ const ChannelAddModal = ({
                 {i18n.t('addChannel')}
               </Button>
               {(touched.input && errors.input)
-              ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
-              : null}
+                ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
+                : null}
             </Form>
           )}
         </Formik>

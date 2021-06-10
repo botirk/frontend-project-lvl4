@@ -16,16 +16,11 @@ const onSubmit = (history) => async (values, actions) => {
     // console.log(result);
     Login.setJWT(result.data);
     history.push('/');
-    actions.resetForm();
+    // actions.resetForm();
   } catch (e) {
     // console.error(e);
-    if (e.message.toLowerCase().includes('network') === true) {
-      actions.setFieldError('username', i18n.t('networkErrorAfterAuth'));
-      actions.setFieldError('password', i18n.t('networkErrorAfterAuth'));
-    } else {
-      actions.setFieldError('username', i18n.t('failedLoginPassword'));
-      actions.setFieldError('password', i18n.t('failedLoginPassword'));
-    }
+    if (e.message.toLowerCase().includes('network') === true) actions.setFieldError('password', i18n.t('networkErrorAfterAuth'));
+    else actions.setFieldError('password', i18n.t('failedLoginPassword'));
   }
 };
 // rendering
@@ -68,13 +63,6 @@ const LoginInner = () => {
               value={values.username}
               isInvalid={touched.username && errors.username}
             />
-            {(touched.username && errors.username)
-              ? (
-                <Form.Control.Feedback type="invalid">
-                  {errors.username}
-                </Form.Control.Feedback>
-              )
-              : null}
           </FormGroup>
           <FormGroup controlId="password">
             <FormLabel>

@@ -17,7 +17,7 @@ const onSubmit = (history) => async (values, actions) => {
     // console.log(result);
     Login.setJWT(result.data);
     history.push('/');
-    actions.resetForm();
+    // actions.resetForm();
   } catch (e) {
     const message = e.message.toLowerCase();
     if (message.includes('409') === true) {

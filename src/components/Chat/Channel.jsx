@@ -73,8 +73,8 @@ const RemovableChannelRenameModal = ({
               &nbsp;
               <Button variant="primary" type="submit">{i18n.t('renameChannel')}</Button>
               {(touched.input && errors.input)
-              ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
-              : null}
+                ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
+                : null}
             </Form>
           )}
         </Formik>
