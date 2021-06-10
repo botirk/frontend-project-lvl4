@@ -9,7 +9,7 @@ import socketAbstraction from '../../socketAbstraction.js';
 import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
 const onSubmitNewChannel = (channels, dispatch, setShown) => async (values, actions) => {
-  const name = values.input.trim();
+  const name = values.input;
   if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
     actions.setFieldError('input', i18n.t('suchChannelAlreadyExists'));
     return;
@@ -78,7 +78,7 @@ const ChannelAddModal = ({
 };
 const ChannelAddButton = ({ setShown, channelNameInputRef }) => {
   const onClick = () => {
-    setShown(true);
+    setShown(true); 
     setTimeout(() => channelNameInputRef.current.focus(), 1);
   };
 
