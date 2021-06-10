@@ -30,6 +30,8 @@ export default {
     cancel: 'Отменить',
     suchChannelAlreadyExists: 'Такой канал уже существует',
     cantSendEmptyMessages: 'Нельзя отправлять пустые сообщения',
+    wrongLoginPassword: 'Неверная пара имя пользователя/пароль',
+    message: 'Сообщение',
   },
 };
 

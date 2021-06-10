@@ -43,7 +43,7 @@ export default () => {
   socket.on('renameChannel',
     ({ name, id }) => abstraction.onRenameChannel.forEach((cb) => cb(name, id)));
   // debugging information for socket
-  if (process.env.NODE_ENV !== 'production') socket.onAny((...args) => console.log('socket.onAny', args));
+  if (process.env.NODE_ENV !== 'production' && socket.onAny !== undefined) { socket.onAny((...args) => console.log('socket.onAny', args)); }
 
   return abstraction;
 };

@@ -1,28 +1,28 @@
 /* eslint-disable no-param-reassign */
 import React, { useState, useRef } from 'react';
+import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { Modal, Form, Button } from 'react-bootstrap';
+import { Formik } from 'formik';
 import i18n from 'i18next';
 import socketAbstraction from '../../socketAbstraction.js';
 import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
-const onSubmitNewChannel = (e, channels, dispatch) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const name = formData.get('input').trim();
+const onSubmitNewChannel = (channels, dispatch, setShown) => async (values, actions) => {
+  const name = values.input.trim();
   if (name.length === 0 || name.length > 10) {
-    if (alert) alert(i18n.t('channelNameShouldContainFrom1to10Symbols'));
-    return true;
+    actions.setFieldError('input', i18n.t('channelNameShouldContainFrom1to10Symbols'));
+    return;
   }
   if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
-    if (alert) alert(`${name}: ${i18n.t('suchChannelAlreadyExists')}`);
-    return true;
+    actions.setFieldError('input', i18n.t('suchChannelAlreadyExists'));
+    return;
   }
-  e.target.reset();
   dispatch(currentChannelIdActions.wait(name));
   socketAbstraction().newChannel(name);
-  return false;
-};
+  setShown(false);
+  actions.resetForm();
+}
 
 const ChannelAddModal = ({
   channels, isShown, setShown, channelNameInputRef,
@@ -35,18 +35,47 @@ const ChannelAddModal = ({
         <Modal.Title>{i18n.t('addingChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Footer>
-        <Form onSubmit={(e) => setShown(onSubmitNewChannel(e, channels, dispatch))} style={{ width: '100%' }} inline>
-          <Form.Control
-            data-testid="add-channel"
-            ref={channelNameInputRef}
-            name="input"
-            type="text"
-            placeholder={i18n.t('nameOfChannel')}
-            style={{ width: '20rem' }}
-          />
-        &nbsp;
-          <Button variant="primary" type="submit">{i18n.t('addChannel')}</Button>
-        </Form>
+        <Formik
+          initialValues={{ input: '' }}
+          validationSchema={Yup.object({
+            input: Yup.string().required(i18n.t('required'))
+              .min(1).max(10, i18n.t('channelNameShouldContainFrom1to10Symbols')),
+          })}
+          onSubmit={onSubmitNewChannel(channels, dispatch, setShown)}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+          }) => (
+            <Form onSubmit={handleSubmit} style={{ width: '100%' }} inline>
+              <Form.Control
+                data-testid="add-channel"
+                ref={channelNameInputRef}
+                name="input"
+                type="text"
+                placeholder={i18n.t('nameOfChannel')}
+                style={{ width: '20rem' }}
+                disabled={isSubmitting}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.input}
+                isInvalid={touched.input && errors.input}
+              />
+              &nbsp;
+              <Button disabled={isSubmitting} variant="primary" type="submit">
+                {i18n.t('addChannel')}
+              </Button>
+              {(touched.input && errors.input)
+              ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
+              : null}
+            </Form>
+          )}
+        </Formik>
       </Modal.Footer>
     </Modal>
   );

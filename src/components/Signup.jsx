@@ -17,20 +17,18 @@ const onSubmit = (history) => async (values, actions) => {
     // console.log(result);
     Login.setJWT(result.data);
     history.push('/');
+    actions.resetForm();
   } catch (e) {
     const message = e.message.toLowerCase();
     if (message.includes('409') === true) {
       actions.setFieldError('username', i18n.t('nickTaken'));
-      if (alert) alert(i18n.t('nickTaken'));
     } else if (message.includes('network') === true) {
       actions.setFieldError('username', i18n.t('authNetoworkError'));
       actions.setFieldError('password', i18n.t('authNetoworkError'));
-      if (alert) alert(i18n.t('authNetoworkError'));
     } else {
       console.error(e);
       actions.setFieldError('username', i18n.t('wrongLoginPassword'));
       actions.setFieldError('password', i18n.t('wrongLoginPassword'));
-      if (alert) alert(i18n.t('wrongLoginPassword'));
     }
   }
 };
@@ -70,7 +68,6 @@ const SignupInner = () => {
               name="username"
               type="text"
               value={values.username}
-              isValid={touched.username && !errors.username}
               isInvalid={touched.username && errors.username}
             />
             {(touched.username && errors.username)
@@ -86,7 +83,6 @@ const SignupInner = () => {
               name="password"
               type="password"
               value={values.password}
-              isValid={touched.password && !errors.password}
               isInvalid={touched.password && errors.password}
             />
             {(touched.password && errors.password)
@@ -102,7 +98,6 @@ const SignupInner = () => {
               name="password2"
               type="password"
               value={values.password2}
-              isValid={touched.password2 && !errors.password2}
               isInvalid={touched.password2 && errors.password2}
             />
             {(touched.password2 && errors.password2)

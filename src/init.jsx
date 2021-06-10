@@ -8,11 +8,13 @@ import { forceSocket } from './socketAbstraction.js';
 
 export default async (socket = undefined) => {
   // translations
-  await i18next.init({
-    lng: 'ru',
-    debug: process.env.NODE_ENV !== 'production',
-    resources: locales,
-  });
+  if (!i18next.isInitialized) {
+    await i18next.init({
+      lng: 'ru',
+      debug: process.env.NODE_ENV !== 'production',
+      resources: locales,
+    });
+  }
   // socket
   if (socket !== undefined) forceSocket(socket);
   // redux + react

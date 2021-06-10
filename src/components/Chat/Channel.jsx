@@ -1,29 +1,27 @@
 import React, { useRef, useState } from 'react';
+import * as Yup from 'yup';
 import {
   Button, Dropdown, ButtonGroup, Modal, Form,
 } from 'react-bootstrap';
-
+import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import i18n from 'i18next';
 import socketAbstraction from '../../socketAbstraction.js';
 import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
 // callback logic
-const onChannelRename = (e, channel, channels) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const name = formData.get('input').trim();
+const onSubmitChannelRename = (channel, channels, setShown) => async (values, actions) => {
+  const name = values.input.trim();
   if (name.length === 0 || name.length > 10) {
-    if (alert) alert(i18n.t('channelNameShouldContainFrom1to10Symbols'));
-    return true;
+    actions.setFieldError('input', i18n.t('channelNameShouldContainFrom1to10Symbols'));
+    return;
   }
   if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
-    alert(`${name}: ${i18n.t('suchChannelAlreadyExists')}`);
-    return true;
+    actions.setFieldError('input', i18n.t('suchChannelAlreadyExists'));
+    return;
   }
-  e.target.reset();
   socketAbstraction().renameChannel(name, channel.id);
-  return false;
+  setShown(false);
 };
 const onChannelClick = (dispatch, id, active) => (e) => {
   e.preventDefault();
@@ -41,19 +39,45 @@ const RemovableChannelRenameModal = ({
         <Modal.Title>{i18n.t('renamingChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Footer>
-        <Form onSubmit={(e) => setShown(onChannelRename(e, channel, channels))} style={{ width: '100%' }} inline>
-          <Form.Control
-            data-testid="rename-channel"
-            ref={channelRenameInputRef}
-            defaultValue={channel.name}
-            name="input"
-            type="text"
-            placeholder={i18n.t('nameOfChannel')}
-            style={{ width: '15rem' }}
-          />
-        &nbsp;
-          <Button variant="primary" type="submit">{i18n.t('renameChannel')}</Button>
-        </Form>
+        <Formik
+          initialValues={{ input: channel.name }}
+          validationSchema={Yup.object({
+            input: Yup.string().required(i18n.t('required'))
+              .min(1).max(10, i18n.t('channelNameShouldContainFrom1to10Symbols')),
+          })}
+          onSubmit={onSubmitChannelRename(channel, channels, setShown)}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+          }) => (
+            <Form onSubmit={handleSubmit} style={{ width: '100%' }} inline>
+              <Form.Control
+                data-testid="rename-channel"
+                ref={channelRenameInputRef}
+                name="input"
+                type="text"
+                placeholder={i18n.t('nameOfChannel')}
+                style={{ width: '15rem' }}
+                disabled={isSubmitting}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.input}
+                isInvalid={touched.input && errors.input}
+              />
+              &nbsp;
+              <Button variant="primary" type="submit">{i18n.t('renameChannel')}</Button>
+              {(touched.input && errors.input)
+              ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
+              : null}
+            </Form>
+          )}
+        </Formik>
       </Modal.Footer>
     </Modal>
   );
