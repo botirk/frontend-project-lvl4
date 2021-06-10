@@ -8,22 +8,21 @@ import i18n from 'i18next';
 import socketAbstraction from '../../socketAbstraction.js';
 import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
-const onSubmitNewChannel = (channels, dispatch, setShown) => async (values, actions) => {
+const onSubmitNewChannel = (dispatch, setShown) => async (values) => {
   const name = values.input;
-  if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
-    actions.setFieldError('input', i18n.t('suchChannelAlreadyExists'));
-    return;
-  }
+  setShown(false);
   dispatch(currentChannelIdActions.wait(name));
   socketAbstraction().newChannel(name);
-  setShown(false);
   // actions.resetForm();
 };
 
 const ChannelAddModal = ({
   channels, isShown, setShown, channelNameInputRef,
 }) => {
+  // hooks
   const dispatch = useDispatch();
+  // channel names array
+  const channelNames = channels.allIds.map((id) => channels.byId[id].name);
 
   return (
     <Modal show={isShown} onHide={() => setShown(false)}>
@@ -35,9 +34,10 @@ const ChannelAddModal = ({
           initialValues={{ input: '' }}
           validationSchema={Yup.object({
             input: Yup.string().required(i18n.t('required'))
-              .min(1).max(15, i18n.t('channelNameShouldContainFrom1to15Symbols')),
+              .min(1).max(15, i18n.t('channelNameShouldContainFrom1to15Symbols'))
+              .notOneOf((channelNames), i18n.t('suchChannelAlreadyExists')),
           })}
-          onSubmit={onSubmitNewChannel(channels, dispatch, setShown)}
+          onSubmit={onSubmitNewChannel(dispatch, setShown)}
         >
           {({
             values,
