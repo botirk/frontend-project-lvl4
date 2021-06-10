@@ -68,7 +68,7 @@ const ChannelAddModal = ({
               />
               &nbsp;
               <Button disabled={isSubmitting} variant="primary" type="submit">
-                {i18n.t('addChannel')}
+                {i18n.t('send')}
               </Button>
               {(touched.input && errors.input)
                 ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
