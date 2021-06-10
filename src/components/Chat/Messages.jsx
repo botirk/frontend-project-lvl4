@@ -13,7 +13,7 @@ const Message = ({ message }) => (
 );
 
 const style = { overflow: 'auto', height: '74vh' };
-export default ({ currentChannelId }) => {
+const Messages = ({ currentChannelId }) => {
   const messages = useSelector((state) => state.messages.byChannelId[currentChannelId] ?? []);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -29,3 +29,5 @@ export default ({ currentChannelId }) => {
     </ListGroup>
   );
 };
+Messages.displayName = 'Messages';
+export default Messages;

@@ -39,4 +39,5 @@ const Channels = () => {
     </>
   );
 };
+Channels.displayName = 'Channels';
 export default Channels;

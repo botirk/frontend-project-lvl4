@@ -16,7 +16,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "functional"
     ],
     "rules": {
         "import/extensions": 0,

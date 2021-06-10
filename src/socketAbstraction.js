@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-let, no-use-before-define */
 import { io } from 'socket.io-client';
 
 let forcedSocket;

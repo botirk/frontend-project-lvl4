@@ -59,7 +59,7 @@ const fillStore = async (dispatch, history) => {
 };
 
 const style = { height: '100%', padding: '1rem' };
-export default () => {
+const Index = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   useEffect(() => fillStore(dispatch, history));
@@ -78,3 +78,5 @@ export default () => {
     </Container>
   );
 };
+Index.displayName = 'Index';
+export default Index;

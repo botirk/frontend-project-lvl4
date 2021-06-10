@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import React from 'react';
 import { Navbar, Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
@@ -17,7 +18,7 @@ const LogoutButton = ({ history }) => {
   );
 };
 
-export default () => {
+const Header = () => {
   const history = useHistory();
 
   return (
@@ -29,3 +30,5 @@ export default () => {
     </Navbar>
   );
 };
+Header.displayName = 'Header';
+export default Header;

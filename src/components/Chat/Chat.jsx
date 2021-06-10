@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Messages from './Messages.jsx';
 import Input from './Input.jsx';
 
-export default () => {
+const Chat = () => {
   const currentChannelId = useSelector((state) => state.currentChannelId.id);
 
   return (
@@ -13,3 +13,5 @@ export default () => {
     </>
   );
 };
+Chat.displayName = 'Chat';
+export default Chat;

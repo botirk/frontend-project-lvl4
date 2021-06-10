@@ -190,5 +190,5 @@ const Channel = ({ dispatch, channel, active }) => {
     />
   );
 };
-//Channel.displayname = 'Channel';
+Channel.displayName = 'Channel';
 export default Channel;

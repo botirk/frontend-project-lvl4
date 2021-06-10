@@ -19,7 +19,7 @@ const formStyle = {
 };
 const controlStyle = { width: '80%' };
 const buttonStyle = { width: '15%' };
-export default ({ currentChannelId }) => (
+const Input = ({ currentChannelId }) => (
   <Formik
     initialValues={{ input: '' }}
     validationSchema={Yup.object({
@@ -61,3 +61,5 @@ export default ({ currentChannelId }) => (
     )}
   </Formik>
 );
+Input.displayName = 'Input';
+export default Input;

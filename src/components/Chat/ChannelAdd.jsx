@@ -108,5 +108,5 @@ const ChannelAdd = ({ channels }) => {
     </>
   );
 };
-//ChannelAdd.displayName = 'ChannelAdd';
+ChannelAdd.displayName = 'ChannelAdd';
 export default ChannelAdd;

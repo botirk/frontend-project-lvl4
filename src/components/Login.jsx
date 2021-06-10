@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle, no-use-before-define */
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -109,6 +110,7 @@ const Login = () => (
     </div>
   </>
 );
+Login.displayName = 'Login';
 // login extra logic
 Login.setJWT = (value) => {
   localStorage.setItem('JWT', JSON.stringify(value));

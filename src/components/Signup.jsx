@@ -112,7 +112,7 @@ const SignupInner = () => {
     </Formik>
   );
 };
-export default () => (
+const Signup = () => (
   <>
     <Header />
     <div className="d-flex flex-column h-100">
@@ -124,3 +124,5 @@ export default () => (
     </div>
   </>
 );
+Signup.displayName = 'Signup';
+export default Signup;
