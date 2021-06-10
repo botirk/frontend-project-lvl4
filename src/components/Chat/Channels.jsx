@@ -5,7 +5,7 @@ import Channel from './Channel.jsx';
 import socketAbstraction from '../../socketAbstraction.js';
 import * as channelsActions from '../../slices/channels.js';
 
-export default () => {
+const Channels = () => {
   // state subscribe + dispatch
   const { channels, currentChannelId } = useSelector(
     (state) => ({ channels: state.channels, currentChannelId: state.currentChannelId.id }),
@@ -39,3 +39,4 @@ export default () => {
     </>
   );
 };
+export default Channels;

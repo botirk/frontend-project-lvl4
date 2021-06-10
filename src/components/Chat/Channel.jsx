@@ -172,7 +172,7 @@ const StaticChannel = ({ dispatch, channel, active }) => {
   );
 };
 
-export default ({ dispatch, channel, active }) => {
+const Channel = ({ dispatch, channel, active }) => {
   if (channel.removable === true) {
     return (
       <RemovableChannel
@@ -190,3 +190,5 @@ export default ({ dispatch, channel, active }) => {
     />
   );
 };
+//Channel.displayname = 'Channel';
+export default Channel;

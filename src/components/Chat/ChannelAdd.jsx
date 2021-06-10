@@ -8,7 +8,7 @@ import i18n from 'i18next';
 import socketAbstraction from '../../socketAbstraction.js';
 import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
-const onSubmitNewChannel = (dispatch, setShown) => async (values) => {
+const onSubmitNewChannel = (dispatch, setShown) => (values) => {
   const name = values.input;
   setShown(false);
   dispatch(currentChannelIdActions.wait(name));
@@ -78,7 +78,7 @@ const ChannelAddModal = ({
 };
 const ChannelAddButton = ({ setShown, channelNameInputRef }) => {
   const onClick = () => {
-    setShown(true); 
+    setShown(true);
     setTimeout(() => channelNameInputRef.current.focus(), 1);
   };
 
@@ -92,7 +92,7 @@ const ChannelAddButton = ({ setShown, channelNameInputRef }) => {
     </div>
   );
 };
-export default ({ channels }) => {
+const ChannelAdd = ({ channels }) => {
   const [isShown, setShown] = useState(false);
   const channelNameInputRef = useRef();
 
@@ -108,3 +108,5 @@ export default ({ channels }) => {
     </>
   );
 };
+//ChannelAdd.displayName = 'ChannelAdd';
+export default ChannelAdd;
