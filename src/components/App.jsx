@@ -10,14 +10,15 @@ import Login from './Login.jsx';
 import Code404 from './Code404.jsx';
 import Signup from './Signup.jsx';
 
-const checkLogin = (option) => () => ((Login.isThereJWT() === false)
+const CheckLogin = (option) => () => ((Login.isThereJWT() === false)
   ? <Redirect to="/login" />
   : option);
+CheckLogin.displayName = 'CheckLogin';
 
-export default () => (
+const App = () => (
   <Router>
     <Switch>
-      <Route exact path="/" render={checkLogin(<Index />)} />
+      <Route exact path="/" render={CheckLogin(<Index />)} />
       <Route path="/login"><Login /></Route>
       <Route path="/signup"><Signup /></Route>
       <Route path="/404"><Code404 /></Route>
@@ -25,3 +26,5 @@ export default () => (
     </Switch>
   </Router>
 );
+App.displayName = 'App';
+export default App;

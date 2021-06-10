@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-param-reassign, testing-library/await-async-utils */
 import React, { useState, useRef } from 'react';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
@@ -8,11 +8,10 @@ import i18n from 'i18next';
 import socketAbstraction from '../../socketAbstraction.js';
 import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
-const onSubmitNewChannel = (dispatch, setShown) => (values) => {
-  const name = values.input;
+const onSubmitNewChannel = (dispatch, setShown) => async ({ input }) => {
   setShown(false);
-  dispatch(currentChannelIdActions.wait(name));
-  socketAbstraction().newChannel(name);
+  dispatch(currentChannelIdActions.wait(input));
+  socketAbstraction().newChannel(input);
   // actions.resetForm();
 };
 

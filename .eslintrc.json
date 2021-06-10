@@ -17,7 +17,8 @@
     },
     "plugins": [
         "react",
-        "functional"
+        "functional",
+        "eslint-plugin-testing-library"
     ],
     "rules": {
         "import/extensions": 0,
