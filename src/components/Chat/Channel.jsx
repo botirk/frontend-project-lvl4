@@ -10,14 +10,9 @@ import socketAbstraction from '../../socketAbstraction.js';
 import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
 // callback logic
-const onSubmitChannelRename = (channel, channels, setShown) => async (values, actions) => {
-  const name = values.input.trim();
-  if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
-    actions.setFieldError('input', i18n.t('suchChannelAlreadyExists'));
-    return;
-  }
-  socketAbstraction().renameChannel(name, channel.id);
+const onSubmitChannelRename = (setShown) => async ({ input }) => {
   setShown(false);
+  socketAbstraction().renameChannel(input, input);
 };
 const onChannelClick = (dispatch, id, active) => (e) => {
   e.preventDefault();
@@ -27,7 +22,10 @@ const onChannelClick = (dispatch, id, active) => (e) => {
 const RemovableChannelRenameModal = ({
   channel, isShown, setShown, channelRenameInputRef,
 }) => {
+  // hook
   const channels = useSelector((state) => state.channels);
+  // channel names array
+  const channelNames = channels.allIds.map((id) => channels.byId[id].name);
 
   return (
     <Modal show={isShown} onHide={() => setShown(false)}>
@@ -39,9 +37,10 @@ const RemovableChannelRenameModal = ({
           initialValues={{ input: channel.name }}
           validationSchema={Yup.object({
             input: Yup.string().required(i18n.t('required'))
-              .min(1).max(15, i18n.t('channelNameShouldContainFrom1to15Symbols')),
+              .min(1).max(15, i18n.t('channelNameShouldContainFrom1to15Symbols'))
+              .notOneOf((channelNames), i18n.t('suchChannelAlreadyExists')),
           })}
-          onSubmit={onSubmitChannelRename(channel, channels, setShown)}
+          onSubmit={onSubmitChannelRename(setShown)}
         >
           {({
             values,
@@ -92,8 +91,8 @@ const RemovableChannelRemoveModal = ({ channel, isShown, setShown }) => (
         <Button
           variant="danger"
           onClick={() => {
-            socketAbstraction().removeChannel(channel.id);
             setShown(false);
+            socketAbstraction().removeChannel(channel.id);
           }}
         >
           {i18n.t('delete')}

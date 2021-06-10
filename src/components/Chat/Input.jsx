@@ -7,11 +7,10 @@ import i18n from 'i18next';
 import Login from '../Login.jsx';
 import socketAbstraction from '../../socketAbstraction.js';
 
-const onSubmit = (currentChannelId) => async (values, actions) => {
-  const body = values.input.trim();
+const onSubmit = (currentChannelId) => async ({ input }, actions) => {
   const { username } = Login.getJWT();
-  socketAbstraction().newMessage(username, body, currentChannelId);
   actions.resetForm();
+  socketAbstraction().newMessage(username, input, currentChannelId);
 };
 
 const formStyle = {
