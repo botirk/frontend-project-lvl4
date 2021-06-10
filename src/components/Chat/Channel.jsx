@@ -127,7 +127,6 @@ const RemovableChannel = ({ dispatch, channel, active }) => {
         onClick={onChannelClick(dispatch, channel.id, active)}
         variant={variant}
         style={child}
-        role='button'
       >
         {channel.name}
       </Button>
