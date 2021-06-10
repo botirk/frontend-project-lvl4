@@ -10,10 +10,6 @@ import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
 const onSubmitNewChannel = (channels, dispatch, setShown) => async (values, actions) => {
   const name = values.input.trim();
-  if (name.length === 0 || name.length > 10) {
-    actions.setFieldError('input', i18n.t('channelNameShouldContainFrom1to10Symbols'));
-    return;
-  }
   if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
     actions.setFieldError('input', i18n.t('suchChannelAlreadyExists'));
     return;
@@ -39,7 +35,7 @@ const ChannelAddModal = ({
           initialValues={{ input: '' }}
           validationSchema={Yup.object({
             input: Yup.string().required(i18n.t('required'))
-              .min(1).max(10, i18n.t('channelNameShouldContainFrom1to10Symbols')),
+              .min(1).max(15, i18n.t('channelNameShouldContainFrom1to15Symbols')),
           })}
           onSubmit={onSubmitNewChannel(channels, dispatch, setShown)}
         >

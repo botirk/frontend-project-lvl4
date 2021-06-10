@@ -26,7 +26,7 @@ export default {
     'sure?': 'Вы уверены?',
     renamingChannel: 'Переименование канала',
     renameChannel: 'Переименовать канал',
-    channelNameShouldContainFrom1to10Symbols: 'Имя канала должно составлять от 1 до 10 символов',
+    channelNameShouldContainFrom1to15Symbols: 'Имя канала должно составлять от 1 до 15 символов',
     cancel: 'Отменить',
     suchChannelAlreadyExists: 'Такой канал уже существует',
     cantSendEmptyMessages: 'Нельзя отправлять пустые сообщения',
@@ -36,7 +36,7 @@ export default {
 };
 
 /* {
-  "channelNameShouldContainFrom1to10Symbols": "",
+  "channelNameShouldContainFrom1to15Symbols": "",
   "suchChannelAlreadyExists": "",
   "renamingChannel": "",
   "nameOfChannel": "",

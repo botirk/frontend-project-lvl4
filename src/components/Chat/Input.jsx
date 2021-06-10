@@ -9,10 +9,6 @@ import socketAbstraction from '../../socketAbstraction.js';
 
 const onSubmit = (currentChannelId) => async (values, actions) => {
   const body = values.input.trim();
-  if (body.length === 0) {
-    actions.setFieldError('input', i18n.t('cantSendEmptyMessages'));
-    return;
-  }
   const { username } = Login.getJWT();
   socketAbstraction().newMessage(username, body, currentChannelId);
   actions.resetForm();
