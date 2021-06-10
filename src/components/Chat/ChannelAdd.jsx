@@ -9,7 +9,7 @@ import socketAbstraction from '../../socketAbstraction.js';
 import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
 const onSubmitNewChannel = (channels, dispatch, setShown) => async (values, actions) => {
-  const name = values.input;
+  const name = values.input.trim();
   if (channels.allIds.find((id) => channels.byId[id].name === name) !== undefined) {
     actions.setFieldError('input', i18n.t('suchChannelAlreadyExists'));
     return;

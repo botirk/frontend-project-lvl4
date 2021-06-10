@@ -127,6 +127,7 @@ const RemovableChannel = ({ dispatch, channel, active }) => {
         onClick={onChannelClick(dispatch, channel.id, active)}
         variant={variant}
         style={child}
+        aria-label={channel.name}
       >
         {channel.name}
       </Button>
