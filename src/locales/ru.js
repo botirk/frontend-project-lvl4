@@ -20,6 +20,7 @@ export default {
     createPassword: 'Пароль',
     repeatPassword: 'Подтвердите пароль',
     registrate: 'Зарегистрироваться',
+    nickTaken: 'Такой ник уже взят',
     rename: 'Переименовать',
     delete: 'Удалить',
     deleteChannel: 'Удаление канала',

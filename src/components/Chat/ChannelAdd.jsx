@@ -1,108 +1,39 @@
 /* eslint-disable no-param-reassign, testing-library/await-async-utils */
 import React, { useState, useRef } from 'react';
-import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
-import { Modal, Form, Button } from 'react-bootstrap';
-import { Formik } from 'formik';
+import { Button } from 'react-bootstrap';
 import i18n from 'i18next';
 import socketAbstraction from '../../socketAbstraction.js';
-import * as currentChannelIdActions from '../../slices/currentChannelId.js';
+import { RemovableChannelRenameModal } from './Channel.jsx';
 
-const onSubmitNewChannel = (dispatch, setShown) => async ({ input }) => {
-  setShown(false);
-  dispatch(currentChannelIdActions.wait(input));
-  socketAbstraction().newChannel(input);
-  // actions.resetForm();
-};
-
-const ChannelAddModal = ({
-  channels, isShown, setShown, channelNameInputRef,
-}) => {
-  // hooks
-  const dispatch = useDispatch();
-  // channel names array
-  const channelNames = channels.allIds.map((id) => channels.byId[id].name);
-
-  return (
-    <Modal show={isShown} onHide={() => setShown(false)}>
-      <Modal.Header closeButton>
-        <Modal.Title>{i18n.t('addingChannel')}</Modal.Title>
-      </Modal.Header>
-      <Modal.Footer>
-        <Formik
-          initialValues={{ input: '' }}
-          validationSchema={Yup.object({
-            input: Yup.string().required(i18n.t('required'))
-              .min(1).max(15, i18n.t('channelNameShouldContainFrom1to15Symbols'))
-              .notOneOf((channelNames), i18n.t('suchChannelAlreadyExists')),
-          })}
-          onSubmit={onSubmitNewChannel(dispatch, setShown)}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-          }) => (
-            <Form onSubmit={handleSubmit} style={{ width: '100%' }} inline>
-              <Form.Control
-                data-testid="add-channel"
-                ref={channelNameInputRef}
-                name="input"
-                type="text"
-                placeholder={i18n.t('nameOfChannel')}
-                style={{ width: '20rem' }}
-                disabled={isSubmitting}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.input}
-                isInvalid={touched.input && errors.input}
-              />
-              &nbsp;
-              <Button disabled={isSubmitting} variant="primary" type="submit">
-                {i18n.t('send')}
-              </Button>
-              {(touched.input && errors.input)
-                ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
-                : null}
-            </Form>
-          )}
-        </Formik>
-      </Modal.Footer>
-    </Modal>
-  );
-};
-const ChannelAddButton = ({ setShown, channelNameInputRef }) => {
+const ChannelAddButton = ({ setShown, channelRenameInputRef }) => {
   const onClick = () => {
     setShown(true);
-    setTimeout(() => channelNameInputRef.current.focus(), 1);
+    setTimeout(() => channelRenameInputRef.current.focus(), 1);
   };
 
-  const style = { display: 'flex' };
-  const child = { flex: '1 1 auto' };
   return (
-    <div style={style}>
-      <Button style={child} variant="info" onClick={onClick}>
-        +
-      </Button>
-    </div>
+    <Button className="w-100" variant="info" onClick={onClick}>
+      +
+    </Button>
   );
 };
+
 const ChannelAdd = ({ channels }) => {
   const [isShown, setShown] = useState(false);
-  const channelNameInputRef = useRef();
+  const channelRenameInputRef = useRef();
 
   return (
     <>
-      <ChannelAddButton setShown={setShown} channelNameInputRef={channelNameInputRef} />
-      <ChannelAddModal
+      <ChannelAddButton setShown={setShown} channelRenameInputRef={channelRenameInputRef} />
+      <RemovableChannelRenameModal
+        modalTitle={i18n.t('addingChannel')}
+        actionTitle={i18n.t('addChannel')}
+        channel={{ name: '' }}
         channels={channels}
         isShown={isShown}
         setShown={setShown}
-        channelNameInputRef={channelNameInputRef}
+        channelRenameInputRef={channelRenameInputRef}
+        onSubmit={(input) => socketAbstraction().newChannel(input)}
       />
     </>
   );

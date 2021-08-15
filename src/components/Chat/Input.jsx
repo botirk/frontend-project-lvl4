@@ -1,64 +1,51 @@
 /* eslint-disable no-param-reassign */
 import React from 'react';
 import * as Yup from 'yup';
+import { useSelector } from 'react-redux';
 import { Form, Button } from 'react-bootstrap';
-import { Formik } from 'formik';
+import { useFormik } from 'formik';
 import i18n from 'i18next';
 import Login from '../Login.jsx';
 import socketAbstraction from '../../socketAbstraction.js';
 
-const onSubmit = (currentChannelId) => async ({ input }, actions) => {
+const onSubmit = (currentChannelId) => ({ input }, { resetForm }) => {
   const { username } = Login.getJWT();
-  actions.resetForm();
+  resetForm();
   socketAbstraction().newMessage(username, input, currentChannelId);
 };
 
-const formStyle = {
-  position: 'absolute', bottom: '1.25rem', left: '8,35%', width: '100%',
-};
-const controlStyle = { width: '80%' };
-const buttonStyle = { width: '15%' };
-const Input = ({ currentChannelId }) => (
-  <Formik
-    initialValues={{ input: '' }}
-    validationSchema={Yup.object({
+const Input = ({ className }) => {
+  const currentChannelId = useSelector((state) => state.currentChannelId.id);
+  const formik = useFormik({
+    initialValues: { input: '' },
+    validationSchema: Yup.object({
       input: Yup.string().required(i18n.t('required')),
-    })}
-    onSubmit={onSubmit(currentChannelId)}
-  >
-    {({
-      values,
-      errors,
-      touched,
-      handleChange,
-      handleBlur,
-      handleSubmit,
-      isSubmitting,
-    }) => (
-      <Form onSubmit={handleSubmit} style={formStyle} inline>
-        <Form.Control
-          data-testid="new-message"
-          autoFocus
-          style={controlStyle}
-          name="input"
-          type="text"
-          placeholder={i18n.t('message')}
-          disabled={isSubmitting}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.input}
-          isInvalid={touched.input && errors.input}
-        />
-        &nbsp;
-        <Button disabled={isSubmitting} style={buttonStyle} variant="primary" type="submit">
-          {i18n.t('send')}
-        </Button>
-        {(touched.input && errors.input)
-          ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
-          : null}
-      </Form>
-    )}
-  </Formik>
-);
+    }),
+    onSubmit: onSubmit(currentChannelId),
+  });
+
+  return (
+    <Form onSubmit={formik.handleSubmit} className={className} inline>
+      <Form.Control
+        autoComplete="off"
+        className="flex-grow-1"
+        data-testid="new-message"
+        autoFocus
+        name="input"
+        type="text"
+        placeholder={i18n.t('message')}
+        disabled={formik.isSubmitting}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.input}
+        isInvalid={formik.touched.input && formik.errors.input}
+      />
+    &nbsp;
+      <Button disabled={formik.isSubmitting} variant="primary" type="submit" className="btn-grow">
+        {i18n.t('send')}
+      </Button>
+    </Form>
+  );
+};
 Input.displayName = 'Input';
 export default Input;

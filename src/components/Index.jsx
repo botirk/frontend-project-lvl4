@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Redirect,
-  BrowserRouter as Router,
+  BrowserRouter,
   Switch,
   Route,
 } from 'react-router-dom';
@@ -11,7 +11,7 @@ import Code404 from './Code404.jsx';
 import Signup from './Signup.jsx';
 
 const App = () => (
-  <Router>
+  <BrowserRouter>
     <Switch>
       <Route
         exact
@@ -25,7 +25,7 @@ const App = () => (
       <Route path="/404"><Code404 /></Route>
       <Route path="*"><Redirect to="/404" /></Route>
     </Switch>
-  </Router>
+  </BrowserRouter>
 );
 App.displayName = 'App';
 export default App;

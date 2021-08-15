@@ -1,4 +1,4 @@
-/* eslint-disable functional/no-let, no-use-before-define */
+/* eslint-disable functional/no-let, no-use-before-define, no-console */
 import { io } from 'socket.io-client';
 
 let forcedSocket;
@@ -27,7 +27,7 @@ export default () => {
       socket.emit('removeChannel', { id });
     },
     onRemoveChannel: [],
-    renameChannel(name, id) {
+    renameChannel(id, name) {
       socket.emit('renameChannel', { id, name });
     },
     onRenameChannel: [],

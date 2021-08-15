@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import socketAbstraction from '../../socketAbstraction.js';
@@ -12,19 +12,22 @@ const Message = ({ message }) => (
   </ListGroup.Item>
 );
 
-const style = { overflow: 'auto', height: '74vh' };
-const Messages = ({ currentChannelId }) => {
+const Messages = ({ className }) => {
+  const currentChannelId = useSelector((state) => state.currentChannelId.id);
   const messages = useSelector((state) => state.messages.byChannelId[currentChannelId] ?? []);
   const dispatch = useDispatch();
+  const messagesEl = useRef(null);
   useEffect(() => {
     socketAbstraction()
       .onNewMessage[0] = (username, body, channelId, id) => dispatch(messagesActions.add({
         username, body, channelId, id,
       }));
+    // scroll to bottom
+    messagesEl.current.scrollTop = messagesEl.current.scrollHeight;
   });
 
   return (
-    <ListGroup style={style}>
+    <ListGroup className={className} ref={messagesEl}>
       {messages.map((message) => <Message key={message.id} message={message} />)}
     </ListGroup>
   );

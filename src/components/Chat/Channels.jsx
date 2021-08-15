@@ -5,12 +5,10 @@ import Channel from './Channel.jsx';
 import socketAbstraction from '../../socketAbstraction.js';
 import * as channelsActions from '../../slices/channels.js';
 
-const Channels = () => {
+const Channels = ({ className }) => {
   // state subscribe + dispatch
-  const { channels, currentChannelId } = useSelector(
-    (state) => ({ channels: state.channels, currentChannelId: state.currentChannelId.id }),
-  );
-
+  const channels = useSelector((state) => state.channels);
+  const currentChannelId = useSelector((state) => state.currentChannelId.id);
   // network update
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,19 +24,19 @@ const Channels = () => {
   });
   // render
   return (
-    <>
+    <div className={className}>
       <ChannelAdd channels={channels} />
-      <div style={{ overflow: 'auto', maxHeight: '60vh' }}>
+      <div className="channels overflow-auto">
         {channels.allIds.map((id) => (
           <Channel
             key={id}
-            dispatch={dispatch}
             channel={channels.byId[id]}
-            active={id === currentChannelId}
+            channels={channels}
+            isActive={id === currentChannelId}
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 Channels.displayName = 'Channels';

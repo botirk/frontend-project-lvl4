@@ -1,7 +1,7 @@
 import React from 'react';
 import i18next from 'i18next';
 import { Provider } from 'react-redux';
-import App from './components/App.jsx';
+import Index from './components/Index.jsx';
 import locales from './locales/index.js';
 import store from './store.js';
 import { forceSocket } from './socketAbstraction.js';
@@ -18,5 +18,5 @@ export default async (socket = undefined) => {
   // socket
   if (socket !== undefined) forceSocket(socket);
   // redux + react
-  return <Provider store={store()}><App /></Provider>;
+  return <Provider store={store()}><Index /></Provider>;
 };

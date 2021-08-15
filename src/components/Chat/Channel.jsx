@@ -3,115 +3,99 @@ import * as Yup from 'yup';
 import {
   Button, Dropdown, ButtonGroup, Modal, Form,
 } from 'react-bootstrap';
-import { Formik } from 'formik';
-import { useSelector } from 'react-redux';
+import { useFormik } from 'formik';
+import { useDispatch } from 'react-redux';
 import i18n from 'i18next';
 import socketAbstraction from '../../socketAbstraction.js';
 import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
-// callback logic
-const onSubmitChannelRename = (setShown) => async ({ input }) => {
-  setShown(false);
-  socketAbstraction().renameChannel(input, input);
-};
-const onChannelClick = (dispatch, id, active) => (e) => {
-  e.preventDefault();
-  if (active === false) dispatch(currentChannelIdActions.set(id));
-};
-// render logic
-const RemovableChannelRenameModal = ({
-  channel, isShown, setShown, channelRenameInputRef,
-}) => {
-  // hook
-  const channels = useSelector((state) => state.channels);
-  // channel names array
-  const channelNames = channels.allIds.map((id) => channels.byId[id].name);
+// helper function
 
+// modal with rename/name input
+export const RemovableChannelRenameModal = ({
+  onSubmit, modalTitle, actionTitle, channel, channels, isShown, setShown, channelRenameInputRef,
+}) => {
+  // helper function
+  const channelNames = channels.allIds.map((id) => channels.byId[id].name);
+  // hook
+  const formik = useFormik({
+    initialValues: { input: channel.name },
+    validationSchema: Yup.object({
+      input: Yup.string().required(i18n.t('required'))
+        .min(1).max(15, i18n.t('channelNameShouldContainFrom1to15Symbols'))
+        .notOneOf((channelNames), i18n.t('suchChannelAlreadyExists')),
+    }),
+    onSubmit: ({ input }, { setSubmitting, resetForm }) => {
+      setShown(false);
+      onSubmit(input);
+      setSubmitting(false);
+      resetForm();
+    },
+  });
+  // render
   return (
     <Modal show={isShown} onHide={() => setShown(false)}>
       <Modal.Header closeButton>
-        <Modal.Title>{i18n.t('renamingChannel')}</Modal.Title>
+        <Modal.Title>{modalTitle}</Modal.Title>
       </Modal.Header>
-      <Modal.Footer>
-        <Formik
-          initialValues={{ input: channel.name }}
-          validationSchema={Yup.object({
-            input: Yup.string().required(i18n.t('required'))
-              .min(1).max(15, i18n.t('channelNameShouldContainFrom1to15Symbols'))
-              .notOneOf((channelNames), i18n.t('suchChannelAlreadyExists')),
-          })}
-          onSubmit={onSubmitChannelRename(setShown)}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-          }) => (
-            <Form onSubmit={handleSubmit} style={{ width: '100%' }} inline>
-              <Form.Control
-                data-testid="rename-channel"
-                ref={channelRenameInputRef}
-                name="input"
-                type="text"
-                placeholder={i18n.t('nameOfChannel')}
-                style={{ width: '15rem' }}
-                disabled={isSubmitting}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.input}
-                isInvalid={touched.input && errors.input}
-              />
-              &nbsp;
-              <Button variant="primary" type="submit">{i18n.t('renameChannel')}</Button>
-              {(touched.input && errors.input)
-                ? <Form.Control.Feedback type="invalid">{errors.input}</Form.Control.Feedback>
-                : null}
-            </Form>
-          )}
-        </Formik>
-      </Modal.Footer>
+      <Modal.Body>
+        <Form onSubmit={formik.handleSubmit} inline>
+          <Form.Control
+            className="flex-grow-1 flex-shrink-1"
+            data-testid="rename-channel"
+            ref={channelRenameInputRef}
+            name="input"
+            type="text"
+            placeholder={i18n.t('nameOfChannel')}
+            disabled={formik.isSubmitting}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.input}
+            isInvalid={formik.touched.input && formik.errors.input}
+          />
+          &nbsp;
+          <Button disabled={formik.isSubmitting} variant="primary" type="submit">{actionTitle}</Button>
+          {(formik.touched.input && formik.errors.input)
+            ? <Form.Control.Feedback type="invalid">{formik.errors.input}</Form.Control.Feedback>
+            : null}
+        </Form>
+      </Modal.Body>
     </Modal>
   );
 };
+// modal with delete confirmation
 const RemovableChannelRemoveModal = ({ channel, isShown, setShown }) => (
-  <>
-    <Modal show={isShown} onHide={() => setShown(false)}>
-      <Modal.Header closeButton>
-        <Modal.Title>{i18n.t('deleteChannel')}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>{i18n.t('sure?')}</Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={() => setShown(false)}>
-          {i18n.t('cancel')}
-        </Button>
-        <Button
-          variant="danger"
-          onClick={() => {
-            setShown(false);
-            socketAbstraction().removeChannel(channel.id);
-          }}
-        >
-          {i18n.t('delete')}
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  </>
+  <Modal show={isShown} onHide={() => setShown(false)}>
+    <Modal.Header closeButton>
+      <Modal.Title>{i18n.t('deleteChannel')}</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>{i18n.t('sure?')}</Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={() => setShown(false)}>
+        {i18n.t('cancel')}
+      </Button>
+      <Button
+        variant="danger"
+        onClick={() => {
+          setShown(false);
+          socketAbstraction().removeChannel(channel.id);
+        }}
+      >
+        {i18n.t('delete')}
+      </Button>
+    </Modal.Footer>
+  </Modal>
 );
-const RemovableChannel = ({ dispatch, channel, active }) => {
-  // states
+// removable channel with modals
+const RemovableChannel = ({ channel, channels, isActive }) => {
+  // hooks
   const [isRemoveModalShown, setRemoveModalShown] = useState(false);
   const [isRenameModalShown, setRenameModalShown] = useState(false);
   const channelRenameInputRef = useRef();
+  const dispatch = useDispatch();
   // css related
-  const variant = (active === true) ? 'success' : 'primary';
-  const style = { display: 'flex' };
-  const child = { flex: '1 1 auto', maxWidth: '80%', whiteSpace: 'nowrap' };
+  const variant = (isActive === true) ? 'success' : 'primary';
   // calbacks
-  const onRemoveClick = () => setRemoveModalShown(true);
   const onRenameClick = () => {
     setRenameModalShown(true);
     setTimeout(() => {
@@ -121,17 +105,17 @@ const RemovableChannel = ({ dispatch, channel, active }) => {
   };
   // render
   return (
-    <Dropdown key={channel.id} as={ButtonGroup} style={style}>
+    <Dropdown key={channel.id} as={ButtonGroup} className="mt-1 w-100">
       <Button
-        onClick={onChannelClick(dispatch, channel.id, active)}
+        onClick={() => dispatch(currentChannelIdActions.set(channel.id))}
         variant={variant}
-        style={child}
+        className="text-nowrap overflow-hidden"
       >
         {channel.name}
       </Button>
       <Dropdown.Toggle variant={variant} split />
       <Dropdown.Menu>
-        <Dropdown.Item onClick={onRemoveClick}>
+        <Dropdown.Item onClick={() => setRemoveModalShown(true)}>
           {i18n.t('delete')}
         </Dropdown.Item>
         <RemovableChannelRemoveModal
@@ -143,49 +127,51 @@ const RemovableChannel = ({ dispatch, channel, active }) => {
           {i18n.t('rename')}
         </Dropdown.Item>
         <RemovableChannelRenameModal
+          modalTitle={i18n.t('renamingChannel')}
+          actionTitle={i18n.t('renameChannel')}
           channel={channel}
+          channels={channels}
           isShown={isRenameModalShown}
           setShown={setRenameModalShown}
           channelRenameInputRef={channelRenameInputRef}
+          onSubmit={(input) => socketAbstraction().renameChannel(channel.id, input)}
         />
       </Dropdown.Menu>
     </Dropdown>
   );
 };
-const StaticChannel = ({ dispatch, channel, active }) => {
+// basic channel
+const StaticChannel = ({ channel, isActive }) => {
+  // hook
+  const dispatch = useDispatch();
   // css related
-  const variant = (active === true) ? 'success' : 'primary';
-  const style = { display: 'flex' };
-  const child = { flex: '1 1 auto', whiteSpace: 'nowrap' };
+  const variant = (isActive === true) ? 'success' : 'primary';
   // render
   return (
-    <div style={style}>
-      <Button
-        onClick={onChannelClick(dispatch, channel.id, active)}
-        variant={variant}
-        style={child}
-      >
-        {channel.name}
-      </Button>
-    </div>
+    <Button
+      onClick={() => dispatch(currentChannelIdActions.set(channel.id))}
+      variant={variant}
+      className="mt-1 w-100 text-nowrap overflow-hidden"
+    >
+      {channel.name}
+    </Button>
   );
 };
 
-const Channel = ({ dispatch, channel, active }) => {
+const Channel = ({ channel, channels, isActive }) => {
   if (channel.removable === true) {
     return (
       <RemovableChannel
-        dispatch={dispatch}
         channel={channel}
-        active={active}
+        channels={channels}
+        isActive={isActive}
       />
     );
   }
   return (
     <StaticChannel
-      dispatch={dispatch}
       channel={channel}
-      active={active}
+      isActive={isActive}
     />
   );
 };
