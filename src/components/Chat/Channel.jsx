@@ -13,7 +13,8 @@ import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
 // modal with rename/name input
 export const RemovableChannelRenameModal = ({
-  onSubmit, modalTitle, actionTitle, testId, channel, channels, isShown, setShown, channelRenameInputRef,
+  onSubmit, modalTitle, actionTitle, testId, channel, channels,
+  isShown, setShown, channelRenameInputRef,
 }) => {
   // helper function
   const channelNames = channels.allIds.map((id) => channels.byId[id].name);
