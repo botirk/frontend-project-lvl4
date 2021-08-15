@@ -5,7 +5,7 @@ export default {
     failedLoginPassword: 'Неверные имя пользователя или пароль',
     addingChannel: 'Добавление канала',
     nameOfChannel: 'Наименование канала',
-    addChannel: 'Добавить канал',
+    addChannel: 'Отправить',
     send: 'Отправить',
     required: 'Требуется',
     login: 'Войти',

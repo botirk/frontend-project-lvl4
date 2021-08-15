@@ -50,3 +50,7 @@ $mobile-messages: 0.7;
               - #{$mobile-input-h}) * #{$mobile-messages});
   }
 }
+// fix z-index
+.dropdown-menu.show {
+  z-index: 1000;
+}

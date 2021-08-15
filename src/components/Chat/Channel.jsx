@@ -123,9 +123,7 @@ const RemovableChannel = ({ channel, channels, isActive }) => {
           isShown={isRemoveModalShown}
           setShown={setRemoveModalShown}
         />
-        <Dropdown.Item onClick={onRenameClick}>
-          {i18n.t('rename')}
-        </Dropdown.Item>
+        <Dropdown.Item onClick={onRenameClick}>{i18n.t('rename')}</Dropdown.Item>
         <RemovableChannelRenameModal
           testId="rename-channel"
           modalTitle={i18n.t('renamingChannel')}
