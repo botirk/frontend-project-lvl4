@@ -26,6 +26,7 @@ const ChannelAdd = ({ channels }) => {
     <>
       <ChannelAddButton setShown={setShown} channelRenameInputRef={channelRenameInputRef} />
       <RemovableChannelRenameModal
+        testId="add-channel"
         modalTitle={i18n.t('addingChannel')}
         actionTitle={i18n.t('addChannel')}
         channel={{ name: '' }}

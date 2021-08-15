@@ -13,7 +13,7 @@ import * as currentChannelIdActions from '../../slices/currentChannelId.js';
 
 // modal with rename/name input
 export const RemovableChannelRenameModal = ({
-  onSubmit, modalTitle, actionTitle, channel, channels, isShown, setShown, channelRenameInputRef,
+  onSubmit, modalTitle, actionTitle, testId, channel, channels, isShown, setShown, channelRenameInputRef,
 }) => {
   // helper function
   const channelNames = channels.allIds.map((id) => channels.byId[id].name);
@@ -42,7 +42,7 @@ export const RemovableChannelRenameModal = ({
         <Form onSubmit={formik.handleSubmit} inline>
           <Form.Control
             className="flex-grow-1 flex-shrink-1"
-            data-testid="rename-channel"
+            data-testid={testId}
             ref={channelRenameInputRef}
             name="input"
             type="text"
@@ -127,6 +127,7 @@ const RemovableChannel = ({ channel, channels, isActive }) => {
           {i18n.t('rename')}
         </Dropdown.Item>
         <RemovableChannelRenameModal
+          testId="rename-channel"
           modalTitle={i18n.t('renamingChannel')}
           actionTitle={i18n.t('renameChannel')}
           channel={channel}
