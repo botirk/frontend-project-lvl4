@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo 'no tests for this project'",
     "build": "cd frontend && npm run build",
-    "start": "npm run build && npx start-server -s ./frontend/build"
+    "start": "npx start-server -s ./frontend/build"
   },
   "repository": {
     "type": "git",
