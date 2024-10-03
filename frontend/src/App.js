@@ -1,17 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route, redirect } from "react-router-dom";
+import { Provider } from 'react-redux';
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import store from './redux/store';
+import Login from './pages/login';
+import Header from './components/header';
+import Index from "./pages";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<div>main</div>} />
-        <Route path="login" element={<div>login</div>} />
-        <Route path="*" element={<div>404</div>} />
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store()}>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Index>main</Index>} />
+          <Route path="login" element={<Login />} />
+          <Route path="*" element={<div>404</div>} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

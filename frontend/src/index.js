@@ -1,8 +1,19 @@
+import 'bootstrap/dist/css/bootstrap.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import i18next from 'i18next';
+import translation from './translation';
+
+if (!i18next.isInitialized) {
+  await i18next.init({
+    lng: 'ru',
+    debug: process.env.NODE_ENV !== 'production',
+    resources: translation,
+  });
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
