@@ -10,7 +10,6 @@ import { makeFullScreen } from '../utils';
 import { useDispatch } from 'react-redux';
 import { login as loginAction } from '../redux/auth';
 
-// rendering
 const LoginInner = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -97,16 +96,13 @@ const LoginInner = () => {
 
 const Login = () => {
   const ref = useRef();
-  useEffect(() => {
-    makeFullScreen(ref.current);
-  });
+  useEffect(() => { if (ref.current) makeFullScreen(ref.current); });
 
   return <div className="py-2">
-    {/*<Header />*/}
     <div ref={ref} className="d-flex flex-column justify-content-center align-items-center">
       <div className="col-sm-2"><LoginInner /></div>
     </div>
-  </div>
+  </div>;
 };
 
 export default Login;

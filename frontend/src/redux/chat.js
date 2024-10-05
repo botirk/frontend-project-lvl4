@@ -1,16 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const slice = createSlice({
-  name: 'auth',
-  initialState: { selectedChat: localStorage.getItem("selectedChat") },
+  name: 'chat',
+  initialState: { selectedChannel: localStorage.getItem("selectedChannel") || "1" },
   reducers: {
-    selectChat(state, action) {
-      localStorage.setItem("selectedChat", action.payload);
-      state.selectedChat = action.payload;
+    selectChannel(state, action) {
+      localStorage.setItem("selectedChannel", action.payload);
+      state.selectedChannel = action.payload;
     },
   },
 });
 
-export const { selectChat } = slice.actions;
+export const { selectChannel } = slice.actions;
 
 export default slice.reducer;

@@ -13,6 +13,12 @@ export const messagesApi = createApi({
   endpoints: (builder) => ({
     getMessages: builder.query({
       query: () => '',
+      transformResponse: (v) => {
+        return {
+          ids: v.map(v => v.id),
+          entities: v.reduce((prev, cur) => { prev[cur.id] = cur; return prev; },{}),
+        }
+      },
     }),
   }),
 });
