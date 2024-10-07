@@ -9,6 +9,7 @@ import classnames from 'classnames';
 import { makeFullScreen } from '../utils';
 import { useDispatch } from 'react-redux';
 import { login as loginAction } from '../redux/auth';
+import { toast } from 'react-toastify';
 
 const LoginInner = () => {
   const nav = useNavigate();
@@ -31,9 +32,11 @@ const LoginInner = () => {
         nav("/");
       } catch(e) {
         console.error(e)
-        if (e.state < 500) {
+        if (e.status < 500) {
+          toast(i18n.t('failedLoginPassword'));
           setError(i18n.t('failedLoginPassword'));
         } else {
+          toast(i18n.t('networkErrorAfterAuth'));
           setError(i18n.t('networkErrorAfterAuth'));
         }
       }
@@ -63,7 +66,7 @@ const LoginInner = () => {
         {formik.touched.username && formik.errors.username && <div className="invalid-feedback">{formik.errors.username}</div>}
       </div>
       <div className="form-group">
-        <label className="form-label" htmlFor="passowrd"> 
+        <label className="form-label" htmlFor="password"> 
           {i18n.t('password')}
         </label>
         <input

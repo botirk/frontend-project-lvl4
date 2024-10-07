@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { onQueryStartedErrorToast } from "../utils";
 
 export const messagesApi = createApi({
   reducerPath: 'messages',
@@ -19,10 +20,19 @@ export const messagesApi = createApi({
           entities: v.reduce((prev, cur) => { prev[cur.id] = cur; return prev; },{}),
         }
       },
+      onQueryStarted: onQueryStartedErrorToast,
     }),
+    postMessage: builder.mutation({
+      query: ([channel, username, body]) => ({
+        method: 'POST',
+        body: { channel, body, username }
+      }),
+      onQueryStarted: onQueryStartedErrorToast,
+    }),
+    
   }),
 });
 
-export const { useGetMessagesQuery } = messagesApi;
+export const { useGetMessagesQuery, usePostMessageMutation } = messagesApi;
 
 export default messagesApi;

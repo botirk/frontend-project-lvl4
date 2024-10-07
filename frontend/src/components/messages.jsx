@@ -3,16 +3,17 @@ import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import i18next from "i18next";
 
-import { useGetMessagesQuery } from "../redux/messages";
+import { useGetMessagesQuery, usePostMessageMutation } from "../redux/messages";
 import { useEffect, useRef } from "react";
 
 export const Input = () => {
   const selectedChannel = useSelector(state => state.chat.selectedChannel);
-  const { username, token } = useSelector(state => state.auth);
+  const username = useSelector(state => state.auth.username);
 
   const ref = useRef();
   useEffect(() => { if (ref.current) ref.current.focus(); }, [ref.current]);
   
+  const [message] = usePostMessageMutation();
   const formik = useFormik({
     initialValues: { input: '' },
     validationSchema: Yup.object({
@@ -20,23 +21,8 @@ export const Input = () => {
     }),
     onSubmit: async ({ input: body}) => {
       try {
-        await fetch("/api/v1/messages", { 
-          method: "POST", 
-          body: JSON.stringify({ body, channel: selectedChannel, username }),
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
-        });
+        await message([selectedChannel, username, body]);
         formik.resetForm();
-      } catch {
-        try {
-          await fetch("/api/v1/messages", { 
-            method: "POST", 
-            body: JSON.stringify({ body, channel: selectedChannel, username }),
-            headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
-          });
-          formik.resetForm();
-        } catch {
-
-        }
       } finally {
         await new Promise(setTimeout, 100);
         if (ref.current) ref.current.focus();

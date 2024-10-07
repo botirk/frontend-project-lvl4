@@ -39,7 +39,7 @@ const ChannelDeleteModal = ({ channel, hide }) => {
   </div>
 };
 
-const ChannelRenameModal = ({ onSubmit, startingValue, hide }) => {
+const ChannelRenameModal = ({ header, onSubmit, startingValue, hide }) => {
   const channels = useGetChannelsQuery();
   const formik = useFormik({
     initialValues: { input: startingValue },
@@ -72,7 +72,7 @@ const ChannelRenameModal = ({ onSubmit, startingValue, hide }) => {
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{i18next.t("addingChannel")}</h5>
+            <h5 className="modal-title">{header}</h5>
             <button type="button" className="btn-close" aria-label="Close" onClick={hide} disabled={formik.isSubmitting}/>
           </div>
           <form onSubmit={(e) => { e.preventDefault(); formik.handleSubmit(e); }}>
@@ -107,7 +107,7 @@ const ChannelAdd = () => {
   return <>
     <button className="btn btn-primary mt-1 w-100 text-nowrap overflow-hidden" onClick={() => setShown(true)}>{i18next.t('addingChannel')}</button>
     {isShown && <ChannelRenameModal
-      startingValue={""} hide={() => setShown(false)}
+      name={i18next.t('addingChannel')} startingValue={""} hide={() => setShown(false)}
       onSubmit={async ({ input }) => await addChannel(input).unwrap()}
     />}
   </>
@@ -138,22 +138,20 @@ const Channel = ({ channel }) => {
         {i18next.t("deleteChannel")}
       </div></li>}
     </ul>
-    {isRenameShown && <ChannelRenameModal hide={() => setRenameShown(false)} startingValue={channel.name} onSubmit={async ({ input }) => await renameChannel([channel.id, input]).unwrap()} />}
+    {isRenameShown && <ChannelRenameModal name={i18next.t('renameChannel')} hide={() => setRenameShown(false)} startingValue={channel.name} onSubmit={async ({ input }) => await renameChannel([channel.id, input]).unwrap()} />}
     {isDeleteShown && <ChannelDeleteModal hide={() => setDeleteShown(false)} channel={channel} />}
   </div>;
 };
 
 const Channels = () => {
-  const { data: channels, error, isLoading, refetch } = useGetChannelsQuery();
+  const { data: channels } = useGetChannelsQuery();
 
   return <div> 
-    <div>
-      {!channels && <div class="spinner-border" role="status" />}
-      {channels && <>
-        <ChannelAdd />
-        {Object.values(channels.entities).map(channel => <Channel key={channel.id} channel={channel} />)}
-      </>}
-    </div>
+    {!channels && <div class="spinner-border" role="status" />}
+    {channels && <>
+      <ChannelAdd />
+      {Object.values(channels.entities).map(channel => <Channel key={channel.id} channel={channel} />)}
+    </>}
   </div>;
 };
 

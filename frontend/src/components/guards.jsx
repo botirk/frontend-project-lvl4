@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { useIsLogin } from "../redux/auth";
 
@@ -16,3 +15,5 @@ export const LoginGuard = ({ children }) => {
   if (isLogin) return <Navigate to={"/"} />;
   return children;
 }
+
+export const SignupGuard = LoginGuard;

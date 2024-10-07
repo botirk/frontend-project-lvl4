@@ -34,6 +34,9 @@ const t = {
     wrongLoginPassword: 'Неверная пара имя пользователя/пароль',
     message: 'Сообщение',
     browserError: 'Ошибка браузера',
+    "channelDeleted": 'Канал удалён',
+    "channelCreated": 'Канал создан',
+    "channelRenamed": 'Канал переименован',
   },
 };
 
