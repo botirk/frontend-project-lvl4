@@ -19,7 +19,30 @@ const useSocket = () => {
       dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (channels) => {
         channels.ids.push(payload.id);
         channels.entities[payload.id] = payload;
-      }))
+      }));
+    });
+    socket.on('renameChannel', (payload) => { // { id: 7, name: "new name channel", removable: true }
+      dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (channels) => {
+        channels.entities[payload.id] = payload;
+      }));
+    });
+    socket.on('removeChannel', (payload) => { // { id: 6 };
+      dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (channels) => {
+        delete channels.entities[payload.id];
+        const i = channels.ids.indexOf(payload.id);
+        if (i >= 0) channels.ids.splice(i, 1);
+      }));
+      dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (messages) => {
+        for (let i = 0; i < messages.ids.length; i += 1) {
+          const id = messages.ids[i];
+          const message = messages.entities[id];
+          if (message.channeld === payload.id) {
+            messages.ids.splice(i);
+            delete messages.channels[id];
+            i -= 1;
+          }
+        }
+      }));
     });
 
     return () => socket.disconnect();

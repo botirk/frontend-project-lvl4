@@ -33,6 +33,7 @@ const t = {
     cantSendEmptyMessages: 'Нельзя отправлять пустые сообщения',
     wrongLoginPassword: 'Неверная пара имя пользователя/пароль',
     message: 'Сообщение',
+    browserError: 'Ошибка браузера',
   },
 };
 

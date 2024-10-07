@@ -1,28 +1,70 @@
 import i18next from "i18next";
-import { Modal } from "bootstrap";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
 import { useDispatch, useSelector } from "react-redux";
-import { useGetChannelsQuery } from "../redux/channels";
-import { selectChannel } from "../redux/chat";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames";
 
-const ChannelAddModal = ({ onSubmit, startingValue, hide }) => {
+import { useAddChannelMutation, useDeleteChannelMutation, useGetChannelsQuery, useRenameChannelMutation } from "../redux/channels";
+import { selectChannel } from "../redux/chat";
+
+const ChannelDeleteModal = ({ channel, hide }) => {
+  const [deleteChannel, result] = useDeleteChannelMutation();
+  useEffect(() => {
+    const cb = async (e) => {
+      if (e.code === "Enter" && (await deleteChannel(channel.id)).error) hide();
+    }
+    document.addEventListener('keyup', cb);
+    return () => document.removeEventListener('keyup', cb);
+  });
+
+  return <div className="modal modal-fullscreen d-block" tabindex="-1">
+    <div className="modal-backdrop">
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">{i18next.t("deleteChannel")}</h5>
+            <button type="button" className="btn-close" aria-label="Close" onClick={hide} disabled={result.isLoading}/>
+          </div>
+            <div className="modal-body">
+              {result.isError && <div class="invalid-feedback">{i18next.t('browserError')}</div>}
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={hide} disabled={result.isLoading}>{i18next.t("cancel")}</button>
+              <button type="button" className="btn btn-primary" onClick={async () => { if (!(await deleteChannel(channel.id)).error) hide(); }} disabled={result.isLoading}>{i18next.t("sure?")}</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+};
+
+const ChannelRenameModal = ({ onSubmit, startingValue, hide }) => {
+  const channels = useGetChannelsQuery();
   const formik = useFormik({
     initialValues: { input: startingValue },
     validationSchema: Yup.object({
-      input: Yup.string().required(i18next.t('required')).min(3, i18next.t('from3SymbolsUpTo20Symbols')).max(21, i18next.t('from3SymbolsUpTo20Symbols')),
+      input: Yup.string()
+        .required(i18next.t('required'))
+        .min(3, i18next.t('from3SymbolsUpTo20Symbols'))
+        .max(21, i18next.t('from3SymbolsUpTo20Symbols'))
+        .test('unique', i18next.t('suchChannelAlreadyExists'), (value) => Object.values(channels.data.entities).findIndex(channel => channel.name === value) === -1),
     }),
     onSubmit: async (values) => {
       try {
         await onSubmit(values);
         hide();
-      } catch(e) {
-        console.error(e)
+      } catch {
+        formik.setErrors({ input: i18next.t('browserError')});
       }
     },
+  });
+  useEffect(() => {
+    const cb = async (e) => {
+      if (e.code === "Enter") formik.submitForm();
+    }
+    document.addEventListener('keyup', cb);
+    return () => document.removeEventListener('keyup', cb);
   });
 
   return <div className="modal modal-fullscreen d-block" tabindex="-1">
@@ -33,7 +75,7 @@ const ChannelAddModal = ({ onSubmit, startingValue, hide }) => {
             <h5 className="modal-title">{i18next.t("addingChannel")}</h5>
             <button type="button" className="btn-close" aria-label="Close" onClick={hide} disabled={formik.isSubmitting}/>
           </div>
-          <form onSubmit={formik.onSubmit}>
+          <form onSubmit={(e) => { e.preventDefault(); formik.handleSubmit(e); }}>
             <div className="modal-body">
               <input 
                 autoFocus
@@ -56,46 +98,56 @@ const ChannelAddModal = ({ onSubmit, startingValue, hide }) => {
       </div>
     </div>
   </div>
-}
+};
 
 const ChannelAdd = () => {
   const [isShown, setShown] = useState(false);
-  const token = useSelector(state => state.auth.token);
-  const dispatch = useDispatch();
+  const [addChannel] = useAddChannelMutation();
 
   return <>
     <button className="btn btn-primary mt-1 w-100 text-nowrap overflow-hidden" onClick={() => setShown(true)}>{i18next.t('addingChannel')}</button>
-    {isShown && <ChannelAddModal 
-      id="add" startingValue={""} hide={() => setShown(false)}
-      onSubmit={async ({ input }) => {
-        const { id } = await (await fetch("/api/v1/channels", { 
-          method: "POST", 
-          body: JSON.stringify({ name: input }),
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
-        })).json();
-        dispatch(selectChannel(id));
-      }}
+    {isShown && <ChannelRenameModal
+      startingValue={""} hide={() => setShown(false)}
+      onSubmit={async ({ input }) => await addChannel(input).unwrap()}
     />}
   </>
-}
+};
 
 const Channel = ({ channel }) => {
   const selectedChannel = useSelector(state => state.chat.selectedChannel);
   const dispatch = useDispatch();
-  return <button 
-    className="btn btn-secondary mt-1 w-100 text-nowrap overflow-hidden" 
-    disabled={selectedChannel === channel.id}
-    onClick={() => dispatch(selectChannel(channel.id))}
-  >
-      {channel.name}
-  </button>;
+  const [isRenameShown, setRenameShown] = useState(false);
+  const [isDeleteShown, setDeleteShown] = useState(false);
+  const [renameChannel] = useRenameChannelMutation();
+
+  return <div class="btn-group mt-1 w-100">
+    <button 
+      type="button" 
+      className="btn btn-secondary text-nowrap"
+      disabled={selectedChannel === channel.id}
+      onClick={() => dispatch(selectChannel(channel.id))}
+    >
+      # {channel.name}
+    </button>
+    <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" />
+    <ul class="dropdown-menu">
+      <li><div className="dropdown-item" onClick={() => setRenameShown(true)}>
+        {i18next.t("renameChannel")}
+      </div></li>
+      {channel.removable && <li><div className="dropdown-item" onClick={() => setDeleteShown(true)}>
+        {i18next.t("deleteChannel")}
+      </div></li>}
+    </ul>
+    {isRenameShown && <ChannelRenameModal hide={() => setRenameShown(false)} startingValue={channel.name} onSubmit={async ({ input }) => await renameChannel([channel.id, input]).unwrap()} />}
+    {isDeleteShown && <ChannelDeleteModal hide={() => setDeleteShown(false)} channel={channel} />}
+  </div>;
 };
 
 const Channels = () => {
   const { data: channels, error, isLoading, refetch } = useGetChannelsQuery();
 
   return <div> 
-    <div className="overflow-auto">
+    <div>
       {!channels && <div class="spinner-border" role="status" />}
       {channels && <>
         <ChannelAdd />
