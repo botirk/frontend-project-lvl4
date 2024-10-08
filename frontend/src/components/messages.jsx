@@ -2,9 +2,10 @@ import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import i18next from "i18next";
+import { useEffect, useRef } from "react";
 
 import { useGetMessagesQuery, usePostMessageMutation } from "../redux/messages";
-import { useEffect, useRef } from "react";
+import filter from "../filter";
 
 export const Input = () => {
   const selectedChannel = useSelector(state => state.chat.selectedChannel);
@@ -21,7 +22,7 @@ export const Input = () => {
     }),
     onSubmit: async ({ input: body}) => {
       try {
-        await message([selectedChannel, username, body]);
+        await message([selectedChannel, username, filter(body)]);
         formik.resetForm();
       } finally {
         await new Promise(setTimeout, 100);

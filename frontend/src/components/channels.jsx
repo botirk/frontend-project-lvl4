@@ -7,6 +7,7 @@ import classNames from "classnames";
 
 import { useAddChannelMutation, useDeleteChannelMutation, useGetChannelsQuery, useRenameChannelMutation } from "../redux/channels";
 import { selectChannel } from "../redux/chat";
+import filter from "../filter";
 
 const ChannelDeleteModal = ({ channel, hide }) => {
   const [deleteChannel, result] = useDeleteChannelMutation();
@@ -83,7 +84,7 @@ const ChannelRenameModal = ({ header, onSubmit, startingValue, hide }) => {
                 placeholder={i18next.t('addingChannel')}
                 disabled={formik.isSubmitting}
                 type="text" name="input" 
-                onBlur={formik.handleBlur} onChange={formik.handleChange} 
+                onBlur={formik.handleBlur} onChange={(e) => { e.target.value = filter(e.target.value); formik.handleChange(e); }} 
                 value={formik.values.input}
                 className={classNames('form-control', {'is-invalid': formik.touched.input && formik.errors.input})} 
               />

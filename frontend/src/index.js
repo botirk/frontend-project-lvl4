@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -8,6 +8,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import i18next from 'i18next';
 import translation from './translation';
+import { Provider, ErrorBoundary } from '@rollbar/react';
 
 if (!i18next.isInitialized) {
   await i18next.init({
@@ -20,7 +21,11 @@ if (!i18next.isInitialized) {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider config={{ accessToken: '8adf7b0691044387ac041bd7966d7ec7', captureUncaught: true, captureUnhandledRejections: true }}>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </Provider>
   </React.StrictMode>
 );
 
