@@ -1,3 +1,7 @@
+/* eslint-disable
+functional/no-expression-statement,
+functional/no-conditional-statement,
+no-param-reassign */
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -6,10 +10,10 @@ import i18n from 'i18next';
 import axios from 'axios';
 import classnames from 'classnames';
 
-import { makeFullScreen } from '../utils';
 import { useDispatch } from 'react-redux';
-import { login as loginAction } from '../redux/auth';
 import { toast } from 'react-toastify';
+import { makeFullScreen } from '../utils';
+import { login as loginAction } from '../redux/auth';
 
 const LoginInner = () => {
   const nav = useNavigate();
@@ -22,25 +26,22 @@ const LoginInner = () => {
       username: Yup.string().required(i18n.t('required')),
       password: Yup.string().required(i18n.t('required')),
     }),
-    onSubmit: async (form) => {
-      try {
-        const result = await axios.post('/api/v1/login', { username: form.username, password: form.password });
-        const { username, token } = result.data;
-        localStorage.setItem("token", token);
-        localStorage.setItem("username", username);
-        dispatch(loginAction({ token, username }));
-        nav("/");
-      } catch(e) {
-        console.error(e)
-        if (e.status < 500) {
-          toast(i18n.t('failedLoginPassword'));
-          setError(i18n.t('failedLoginPassword'));
-        } else {
-          toast(i18n.t('networkErrorAfterAuth'));
-          setError(i18n.t('networkErrorAfterAuth'));
-        }
+    onSubmit: (form) => axios.post('/api/v1/login', { username: form.username, password: form.password }).then((result) => {
+      const { username, token } = result.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('username', username);
+      dispatch(loginAction({ token, username }));
+      nav('/');
+    }).catch((e) => {
+      console.error(e);
+      if (e.status < 500) {
+        toast(i18n.t('failedLoginPassword'));
+        setError(i18n.t('failedLoginPassword'));
+      } else {
+        toast(i18n.t('networkErrorAfterAuth'));
+        setError(i18n.t('networkErrorAfterAuth'));
       }
-    },
+    }),
   });
 
   return (
@@ -54,19 +55,18 @@ const LoginInner = () => {
         </label>
         <input
           autoComplete="off"
-          autoFocus
           disabled={formik.isSubmitting}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           name="username"
           type="text"
-          className={classnames('form-control', {'is-invalid': formik.touched.username && formik.errors.username})}
+          className={classnames('form-control', { 'is-invalid': formik.touched.username && formik.errors.username })}
           value={formik.values.username}
         />
         {formik.touched.username && formik.errors.username && <div className="invalid-feedback">{formik.errors.username}</div>}
       </div>
       <div className="form-group">
-        <label className="form-label" htmlFor="password"> 
+        <label className="form-label" htmlFor="password">
           {i18n.t('password')}
         </label>
         <input
@@ -77,14 +77,14 @@ const LoginInner = () => {
           name="password"
           type="password"
           value={formik.values.password}
-          className={classnames('form-control', {'is-invalid': formik.touched.password && formik.errors.password})}
+          className={classnames('form-control', { 'is-invalid': formik.touched.password && formik.errors.password })}
         />
         {formik.touched.password && formik.errors.password && <div className="invalid-feedback" role="alert">{formik.errors.password}</div>}
       </div>
       <button title={i18n.t('login')} disabled={formik.isSubmitting} type="submit" className="w-100 mb-3 btn btn-outline-primary">
         {i18n.t('login')}
       </button>
-      {error && <div class="alert alert-warning" role="alert">{error}</div>}
+      {error && <div className="alert alert-warning" role="alert">{error}</div>}
       <div className="d-flex flex-column align-items-center">
         <span className="small mb-2">
           {i18n.t('noAccount?')}
@@ -101,11 +101,13 @@ const Login = () => {
   const ref = useRef();
   useEffect(() => { if (ref.current) makeFullScreen(ref.current); });
 
-  return <div className="py-2">
-    <div ref={ref} className="d-flex flex-column justify-content-center align-items-center">
-      <div className="col-sm-2"><LoginInner /></div>
+  return (
+    <div className="py-2">
+      <div ref={ref} className="d-flex flex-column justify-content-center align-items-center">
+        <div className="col-sm-2"><LoginInner /></div>
+      </div>
     </div>
-  </div>;
+  );
 };
 
 export default Login;

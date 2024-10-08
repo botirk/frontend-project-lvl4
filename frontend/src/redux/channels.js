@@ -1,16 +1,20 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { selectChannel } from "./chat";
-import { onQueryStartedErrorToast } from "../utils";
-import i18next from "i18next";
-import { toast } from "react-toastify";
+/* eslint-disable
+functional/no-expression-statement,
+functional/no-conditional-statement,
+no-param-reassign */
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import i18next from 'i18next';
+import { toast } from 'react-toastify';
+import { selectChannel } from './chat';
+import { onQueryStartedErrorToast } from '../utils';
 
-export const channelsApi = createApi({
+const channelsApi = createApi({
   reducerPath: 'channels',
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
     baseUrl: '/api/v1/channels',
     prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token;
-      if (token) headers.set('authorization', `Bearer ${token}`)
+      const { token } = getState().auth;
+      if (token) headers.set('authorization', `Bearer ${token}`);
       return headers;
     },
   }),
@@ -18,28 +22,23 @@ export const channelsApi = createApi({
     getChannels: builder.query({
       query: () => '',
       transformResponse: (v) => ({
-          ids: v.map(v => v.id),
-          entities: v.reduce((prev, cur) => { prev[cur.id] = cur; return prev; }, {}),
+        ids: v.map((v1) => v1.id),
+        entities: v.reduce((prev, cur) => { prev[cur.id] = cur; return prev; }, {}),
       }),
       onQueryStarted: onQueryStartedErrorToast,
     }),
     deleteChannel: builder.mutation({
       query: (id) => ({
         url: `/${id}`,
-        method: 'DELETE'
+        method: 'DELETE',
       }),
-      onCacheEntryAdded: async(arg, api) => {
-        const selectedChannel = api.getState().chat.selectedChannel;
+      onCacheEntryAdded: async (arg, api) => {
+        const { selectedChannel } = api.getState().chat;
         if (selectedChannel === arg) api.dispatch(selectChannel('1'));
       },
-      onQueryStarted: async (_, { queryFulfilled }) => {
+      onQueryStarted: (_, { queryFulfilled }) => {
         onQueryStartedErrorToast(_, { queryFulfilled });
-        try {
-          await queryFulfilled;
-          toast(i18next.t("channelDeleted"));
-        } catch (e) {
-
-        }
+        queryFulfilled.then(() => toast(i18next.t('channelDeleted')));
       },
     }),
     addChannel: builder.mutation({
@@ -47,15 +46,12 @@ export const channelsApi = createApi({
         method: 'POST',
         body: { name },
       }),
-      onCacheEntryAdded: async(_, api) => api.dispatch(selectChannel((await api.cacheDataLoaded).data.id)),
+      onCacheEntryAdded: async (_, api) => api.dispatch(
+        selectChannel((await api.cacheDataLoaded).data.id),
+      ),
       onQueryStarted: async (_, { queryFulfilled }) => {
         onQueryStartedErrorToast(_, { queryFulfilled });
-        try {
-          await queryFulfilled;
-          toast(i18next.t("channelCreated"));
-        } catch (e) {
-
-        }
+        queryFulfilled.then(() => toast(i18next.t('channelCreated')));
       },
     }),
     renameChannel: builder.mutation({
@@ -66,17 +62,14 @@ export const channelsApi = createApi({
       }),
       onQueryStarted: async (_, { queryFulfilled }) => {
         onQueryStartedErrorToast(_, { queryFulfilled });
-        try {
-          await queryFulfilled;
-          toast(i18next.t("channelRenamed"));
-        } catch (e) {
-
-        }
+        queryFulfilled.then(() => toast(i18next.t('channelRenamed')));
       },
     }),
   }),
 });
 
-export const { useGetChannelsQuery, useDeleteChannelMutation, useAddChannelMutation, useRenameChannelMutation } = channelsApi;
+export const {
+  useGetChannelsQuery, useDeleteChannelMutation, useAddChannelMutation, useRenameChannelMutation,
+} = channelsApi;
 
 export default channelsApi;

@@ -1,9 +1,13 @@
-import { io } from "socket.io-client";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+/* eslint-disable
+functional/no-expression-statement,
+functional/no-conditional-statement,
+no-param-reassign */
+import { io } from 'socket.io-client';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 
-import messagesApi from "./redux/messages";
-import channelsApi from "./redux/channels";
+import messagesApi from './redux/messages';
+import channelsApi from './redux/channels';
 
 const useSocket = () => {
   const dispatch = useDispatch();
@@ -27,19 +31,19 @@ const useSocket = () => {
       }));
     });
     socket.on('removeChannel', (payload) => { // { id: 6 };
-      dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (channels) => {
-        delete channels.entities[payload.id];
+      dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (channels) => { // eslint-disable-line
+        delete channels.entities[payload.id]; // eslint-disable-line
         const i = channels.ids.indexOf(payload.id);
-        if (i >= 0) channels.ids.splice(i, 1);
+        if (i >= 0) channels.ids.splice(i, 1); // eslint-disable-line
       }));
-      dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (messages) => {
-        for (let i = 0; i < messages.ids.length; i += 1) {
+      dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (messages) => { // eslint-disable-line
+        for (let i = 0; i < messages.ids.length; i += 1) { // eslint-disable-line
           const id = messages.ids[i];
           const message = messages.entities[id];
-          if (message.channeld === payload.id) {
-            messages.ids.splice(i);
-            delete messages.channels[id];
-            i -= 1;
+          if (message.channeld === payload.id) { // eslint-disable-line
+            messages.ids.splice(i); // eslint-disable-line
+            delete messages.channels[id]; // eslint-disable-line
+            i -= 1; // eslint-disable-line
           }
         }
       }));

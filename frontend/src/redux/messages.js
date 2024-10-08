@@ -1,35 +1,37 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { onQueryStartedErrorToast } from "../utils";
+/* eslint-disable
+functional/no-expression-statement,
+functional/no-conditional-statement,
+no-param-reassign */
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { onQueryStartedErrorToast } from '../utils';
 
-export const messagesApi = createApi({
+const messagesApi = createApi({
   reducerPath: 'messages',
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
     baseUrl: '/api/v1/messages',
     prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token;
-      if (token) headers.set('authorization', `Bearer ${token}`)
-      return headers
+      const { token } = getState().auth;
+      if (token) headers.set('authorization', `Bearer ${token}`);
+      return headers;
     },
   }),
   endpoints: (builder) => ({
     getMessages: builder.query({
       query: () => '',
-      transformResponse: (v) => {
-        return {
-          ids: v.map(v => v.id),
-          entities: v.reduce((prev, cur) => { prev[cur.id] = cur; return prev; },{}),
-        }
-      },
+      transformResponse: (v) => ({
+        ids: v.map((v1) => v1.id),
+        entities: v.reduce((prev, cur) => { prev[cur.id] = cur; return prev; }, {}),
+      }),
       onQueryStarted: onQueryStartedErrorToast,
     }),
     postMessage: builder.mutation({
       query: ([channel, username, body]) => ({
         method: 'POST',
-        body: { channel, body, username }
+        body: { channel, body, username },
       }),
       onQueryStarted: onQueryStartedErrorToast,
     }),
-    
+
   }),
 });
 

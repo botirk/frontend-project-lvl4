@@ -7,7 +7,9 @@
   "scripts": {
     "test": "echo 'no tests for this project'",
     "build": "cd frontend && npm run build",
-    "start": "npx start-server -s ./frontend/build"
+    "start": "npx start-server -s ./frontend/build",
+    "lint": "cd frontend && npx eslint . --ext js,jsx",
+    "lintfix": "cd frontend && npx eslint . --ext js,jsx --fix"
   },
   "repository": {
     "type": "git",

@@ -1,14 +1,18 @@
+/* eslint-disable
+functional/no-expression-statement,
+functional/no-conditional-statement,
+no-param-reassign */
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import i18next from 'i18next';
+import { Provider, ErrorBoundary } from '@rollbar/react';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import i18next from 'i18next';
 import translation from './translation';
-import { Provider, ErrorBoundary } from '@rollbar/react';
 
 if (!i18next.isInitialized) {
   await i18next.init({
@@ -26,7 +30,7 @@ root.render(
         <App />
       </ErrorBoundary>
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

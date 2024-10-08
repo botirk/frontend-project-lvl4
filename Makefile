@@ -1,13 +1,14 @@
-install: install-deps
+start:
+	npm run start
+
+install: 
+	npm i && cd frontent && npm i
 
 build:
 	npm run build
 
 lint:
-	npx eslint . --ext js,jsx
+	npm run lint
 
-lint+fix:
-	npx eslint . --ext js,jsx --fix
-
-test:
-	npm test -s
+lintfix:
+	npm run lintfix
