@@ -68,13 +68,13 @@ const Messages = () => {
   const selectedChannel = useSelector((state) => state.chat.selectedChannel);
 
   return (
-    <div className="overflow-auto">
+    <>
       {isLoading && <div className="spinner-border" role="status" />}
       {!isLoading && Object.values(messages.entities)
         .filter((message) => message.channel === selectedChannel).map((message) => (
           <Message key={message.id} message={message} />
         ))}
-    </div>
+    </>
   );
 };
 
