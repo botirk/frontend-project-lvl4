@@ -49,26 +49,24 @@ const SignupInner = () => {
       <h1 className="text-center mt-4">
         {i18next.t('registration')}
       </h1>
-      <div className="form-group">
-        <label className="form-label" htmlFor="username">
-          {i18next.t('newNick')}
-        </label>
+      <div className="form-floating">
         <input
           autoComplete="off"
           disabled={formik.isSubmitting}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           name="username"
+          placeholder={i18next.t('newNick')}
           type="text"
           className={classNames('form-control', { 'is-invalid': formik.touched.username && formik.errors.username })}
           value={formik.values.username}
         />
+        <label htmlFor="username">
+          {i18next.t('newNick')}
+        </label>
         {formik.touched.username && formik.errors.username && <div className="invalid-feedback">{formik.errors.username}</div>}
       </div>
-      <div className="form-group">
-        <label className="form-label" htmlFor="password1">
-          {i18next.t('createPassword')}
-        </label>
+      <div className="form-floating">
         <input
           autoComplete="off"
           disabled={formik.isSubmitting}
@@ -76,15 +74,16 @@ const SignupInner = () => {
           onBlur={formik.handleBlur}
           name="password1"
           type="password"
+          placeholder={i18next.t('createPassword')}
           value={formik.values.password1}
           className={classNames('form-control', { 'is-invalid': formik.touched.password1 && formik.errors.password1 })}
         />
+        <label htmlFor="password1">
+          {i18next.t('createPassword')}
+        </label>
         {formik.touched.password1 && formik.errors.password1 && <div className="invalid-feedback" role="alert">{formik.errors.password1}</div>}
       </div>
-      <div className="form-group">
-        <label className="form-label" htmlFor="password2">
-          {i18next.t('repeatPassword')}
-        </label>
+      <div className="form-floating">
         <input
           autoComplete="off"
           disabled={formik.isSubmitting}
@@ -92,9 +91,13 @@ const SignupInner = () => {
           onBlur={formik.handleBlur}
           name="password2"
           type="password"
+          placeholder={i18next.t('repeatPassword')}
           value={formik.values.password2}
           className={classNames('form-control', { 'is-invalid': formik.touched.password2 && formik.errors.password2 })}
         />
+        <label htmlFor="password2">
+          {i18next.t('repeatPassword')}
+        </label>
         {formik.touched.password2 && formik.errors.password2 && <div className="invalid-feedback" role="alert">{formik.errors.password2}</div>}
       </div>
       <button title={i18next.t('registration')} disabled={formik.isSubmitting} type="submit" className="w-100 my-3 btn btn-outline-primary">

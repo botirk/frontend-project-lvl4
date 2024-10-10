@@ -49,10 +49,7 @@ const LoginInner = () => {
       <h1 className="text-center mt-4">
         {i18n.t('login')}
       </h1>
-      <div className="form-group">
-        <label className="form-label" htmlFor="username">
-          {i18n.t('yourNick')}
-        </label>
+      <div className="form-floating">
         <input
           autoComplete="off"
           disabled={formik.isSubmitting}
@@ -60,15 +57,16 @@ const LoginInner = () => {
           onBlur={formik.handleBlur}
           name="username"
           type="text"
+          placeholder={i18n.t('yourNick')}
           className={classnames('form-control', { 'is-invalid': formik.touched.username && formik.errors.username })}
           value={formik.values.username}
         />
+        <label htmlFor="username">
+          {i18n.t('yourNick')}
+        </label>
         {formik.touched.username && formik.errors.username && <div className="invalid-feedback">{formik.errors.username}</div>}
       </div>
-      <div className="form-group">
-        <label className="form-label" htmlFor="password">
-          {i18n.t('password')}
-        </label>
+      <div className="form-floating">
         <input
           autoComplete="off"
           disabled={formik.isSubmitting}
@@ -76,9 +74,13 @@ const LoginInner = () => {
           onBlur={formik.handleBlur}
           name="password"
           type="password"
+          placeholder={i18n.t('password')}
           value={formik.values.password}
           className={classnames('form-control', { 'is-invalid': formik.touched.password && formik.errors.password })}
         />
+        <label htmlFor="password">
+          {i18n.t('password')}
+        </label>
         {formik.touched.password && formik.errors.password && <div className="invalid-feedback" role="alert">{formik.errors.password}</div>}
       </div>
       <button title={i18n.t('login')} disabled={formik.isSubmitting} type="submit" className="w-100 mb-3 btn btn-outline-primary">
