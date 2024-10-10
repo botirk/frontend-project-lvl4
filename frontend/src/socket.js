@@ -50,7 +50,7 @@ const useSocket = () => {
     });
 
     return () => socket.disconnect();
-  }, []);
+  }, [dispatch]);
 };
 
 export default useSocket;
