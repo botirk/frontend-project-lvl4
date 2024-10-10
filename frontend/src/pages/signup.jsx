@@ -51,7 +51,7 @@ const SignupInner = () => {
       </h1>
       <div className="form-group">
         <label className="form-label" htmlFor="username">
-          {i18next.t('yourNick')}
+          {i18next.t('newNick')}
         </label>
         <input
           autoComplete="off"
