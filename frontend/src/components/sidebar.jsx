@@ -8,12 +8,14 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
+import { Sidebar as ProSidebar } from 'react-pro-sidebar';
 
 import {
   useAddChannelMutation, useDeleteChannelMutation, useGetChannelsQuery, useRenameChannelMutation,
 } from '../redux/channels';
 import { selectChannel } from '../redux/chat';
 import filter from '../filter';
+import { useWindowBig } from '../utils';
 
 const ChannelDeleteModal = ({ channel, hide }) => {
   const [deleteChannel, result] = useDeleteChannelMutation();
@@ -26,8 +28,8 @@ const ChannelDeleteModal = ({ channel, hide }) => {
   });
 
   return (
-    <div className="modal modal-fullscreen d-block" tabIndex="-1">
-      <div className="modal-backdrop">
+    <div className="modal-backdrop">
+      <div className="modal modal-fullscreen d-block" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
@@ -72,8 +74,8 @@ const ChannelRenameModal = ({
   });
 
   return (
-    <div className="modal modal-fullscreen d-block" tabIndex="-1">
-      <div className="modal-backdrop">
+    <div className="modal-backdrop">
+      <div className="modal fade show modal-fullscreen d-block" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
@@ -116,7 +118,13 @@ const ChannelAdd = () => {
 
   return (
     <>
-      <button type="button" className="btn btn-primary mt-1 w-100 text-nowrap overflow-hidden" onClick={() => setShown(true)}>{i18next.t('addingChannel')}</button>
+      <button
+        className="btn btn-primary mt-1 w-100 text-nowrap overflow-hidden"
+        type="button"
+        onClick={() => setShown(true)}
+      >
+        {i18next.t('addingChannel')}
+      </button>
       {isShown && (
       <ChannelRenameModal
         name={i18next.t('addingChannel')}
@@ -169,21 +177,23 @@ const Channel = ({ channel }) => {
   );
 };
 
-const Channels = () => {
+const Sidebar = () => {
   const { data: channels } = useGetChannelsQuery();
+  const big = useWindowBig();
+  const sidebar = useSelector((state) => state.chat.sidebar);
 
   return (
-    <div>
+    <ProSidebar style={{ height: '100vh' }} hidden={!sidebar && !big}>
       {!channels && <div className="spinner-border" role="status" />}
       {channels && (
-      <>
-        <ChannelAdd />
-        {Object.values(channels.entities)
-          .map((channel) => <Channel key={channel.id} channel={channel} />)}
-      </>
+        <>
+          <ChannelAdd />
+          {Object.values(channels.entities)
+            .map((channel) => <Channel key={channel.id} channel={channel} />)}
+        </>
       )}
-    </div>
+    </ProSidebar>
   );
 };
 
-export default Channels;
+export default Sidebar;

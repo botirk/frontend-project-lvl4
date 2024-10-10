@@ -3,29 +3,37 @@ functional/no-expression-statement,
 functional/no-conditional-statement,
 no-param-reassign */
 import { useEffect, useRef } from 'react';
-import { makeFullScreen } from '../utils';
+import { useSelector } from 'react-redux';
 
+import { makeFullScreen, useWindowBig } from '../utils';
 import useSocket from '../socket';
-import Channels from '../components/channels';
+import MySidebar from '../components/sidebar';
 import Messages, { Input } from '../components/messages';
 
 const Chat = () => {
   const ref = useRef();
-  useEffect(() => { if (ref.current) makeFullScreen(ref.current); });
+  useEffect(() => {
+    const resize = () => {
+      if (ref.current) makeFullScreen(ref.current);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, []);
   useSocket();
+  const big = useWindowBig();
+  const sidebar = useSelector((state) => state.chat.sidebar);
 
   return (
-    <>
-      <div ref={ref} className="row p-2">
-        <div className="col-sm-2 overflow-y-auto">
-          <Channels />
-        </div>
-        <div className="col-sm-10 overflow-y-auto">
+    <div ref={ref} className="d-flex">
+      <MySidebar />
+      {(!sidebar || big) && (
+        <div className="d-flex flex-column justify-content-between h-100 w-100">
           <Messages />
+          <Input />
         </div>
-      </div>
-      <Input />
-    </>
+      )}
+    </div>
   );
 };
 

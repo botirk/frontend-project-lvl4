@@ -16,7 +16,7 @@ export const Input = () => {
   const username = useSelector((state) => state.auth.username);
 
   const ref = useRef();
-  useEffect(() => { if (ref.current) ref.current.focus(); });
+  useEffect(() => { if (ref.current) ref.current.focus(); }, []);
 
   const [message] = usePostMessageMutation();
   const formik = useFormik({
@@ -62,19 +62,17 @@ const Message = ({ message }) => (
 );
 
 const Messages = () => {
-  const {
-    data: messages, isLoading,
-  } = useGetMessagesQuery();
+  const { data: messages } = useGetMessagesQuery();
   const selectedChannel = useSelector((state) => state.chat.selectedChannel);
 
   return (
-    <>
-      {isLoading && <div className="spinner-border" role="status" />}
-      {!isLoading && Object.values(messages.entities)
+    <div className="overflow-y-auto">
+      {!messages && <div className="spinner-border" role="status" />}
+      {messages && Object.values(messages.entities)
         .filter((message) => message.channel === selectedChannel).map((message) => (
           <Message key={message.id} message={message} />
         ))}
-    </>
+    </div>
   );
 };
 
