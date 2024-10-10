@@ -2,7 +2,7 @@ start:
 	npm run start
 
 install: 
-	npm i && cd frontent && npm i
+	npm i && cd frontend && npm i
 
 build:
 	npm run build
