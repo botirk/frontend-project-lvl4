@@ -8,6 +8,7 @@
     "test": "echo 'no tests for this project'",
     "build": "cd frontend && npm run build",
     "start": "npx start-server -s ./frontend/build",
+    "lintwithinstall": "cd frontent && npm ci && npx eslint . --ext js,jsx",
     "lint": "cd frontend && npx eslint . --ext js,jsx",
     "lintfix": "cd frontend && npx eslint . --ext js,jsx --fix"
   },
