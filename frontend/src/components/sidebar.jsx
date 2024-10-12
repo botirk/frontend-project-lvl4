@@ -160,23 +160,25 @@ const Channel = ({ channel }) => {
         {' '}
         {channel.name}
       </button>
-      <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Dropdown">
-        <span className="visually-hidden">{i18next.t('manageChannel')}</span>
-      </button>
-      <ul className="dropdown-menu">
-        <li>
-          <button type="button" className="dropdown-item" onClick={() => setRenameShown(true)}>
-            {i18next.t('renameChannel')}
+      {channel.removable && (
+        <>
+          <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Dropdown">
+            <span className="visually-hidden">{i18next.t('manageChannel')}</span>
           </button>
-        </li>
-        {channel.removable && (
-        <li>
-          <button type="button" className="dropdown-item" onClick={() => setDeleteShown(true)}>
-            {i18next.t('delete')}
-          </button>
-        </li>
-        )}
-      </ul>
+          <ul className="dropdown-menu">
+            <li>
+              <button type="button" className="dropdown-item" onClick={() => setRenameShown(true)}>
+                {i18next.t('renameChannel')}
+              </button>
+            </li>
+            <li>
+              <button type="button" className="dropdown-item" onClick={() => setDeleteShown(true)}>
+                {i18next.t('delete')}
+              </button>
+            </li>
+          </ul>
+        </>
+      )}
       {isRenameShown && <ChannelRenameModal name={i18next.t('renameChannel')} hide={() => setRenameShown(false)} startingValue={channel.name} onSubmit={({ input }) => renameChannel([channel.id, filter(input)]).unwrap()} />}
       {isDeleteShown && <ChannelDeleteModal hide={() => setDeleteShown(false)} channel={channel} />}
     </div>
