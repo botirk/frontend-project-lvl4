@@ -37,6 +37,7 @@ const t = {
     channelDeleted: 'Канал удалён',
     channelCreated: 'Канал создан',
     channelRenamed: 'Канал переименован',
+    manageChannel: 'Управление каналом',
   },
 };
 

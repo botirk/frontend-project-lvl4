@@ -160,7 +160,9 @@ const Channel = ({ channel }) => {
         {' '}
         {channel.name}
       </button>
-      <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Dropdown" />
+      <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Dropdown">
+        <span className="visually-hidden">{i18next.t('manageChannel')}</span>
+      </button>
       <ul className="dropdown-menu">
         <li>
           <button type="button" className="dropdown-item" onClick={() => setRenameShown(true)}>
