@@ -4,7 +4,7 @@ const t = {
     networkErrorAfterAuth: 'Сетевая ошибка при попытке авторизоваться',
     failedLoginPassword: 'Неверные имя пользователя или пароль',
     addingChannel: '+',
-    nameOfChannel: 'Наименование канала',
+    nameOfChannel: 'Имя канала',
     addChannel: 'Отправить',
     send: 'Отправить',
     required: 'Требуется',

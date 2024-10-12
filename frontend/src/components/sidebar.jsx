@@ -84,21 +84,28 @@ const ChannelRenameModal = ({
             </div>
             <form onSubmit={(e) => { e.preventDefault(); formik.handleSubmit(e); }}>
               <div className="modal-body">
-                <input
-                  autoComplete="off"
-                  placeholder={i18next.t('addingChannel')}
-                  disabled={formik.isSubmitting}
-                  type="text"
-                  name="input"
-                  onBlur={formik.handleBlur}
-                  onChange={(e) => {
-                    e.target.value = filter(e.target.value);
-                    formik.handleChange(e);
-                  }}
-                  value={formik.values.input}
-                  className={classNames('form-control', { 'is-invalid': formik.touched.input && formik.errors.input })}
-                />
-                {formik.errors.input && formik.touched.input && <div className="invalid-feedback">{formik.errors.input}</div>}
+                <div className="form-floating">
+                  <input
+                    id="rename"
+                    autoComplete="off"
+                    placeholder={i18next.t('nameOfChannel')}
+                    disabled={formik.isSubmitting}
+                    type="text"
+                    name="input"
+                    onBlur={formik.handleBlur}
+                    onChange={(e) => {
+                      e.target.value = filter(e.target.value);
+                      formik.handleChange(e);
+                    }}
+                    value={formik.values.input}
+                    className={classNames('form-control', { 'is-invalid': formik.touched.input && formik.errors.input })}
+                  />
+                  <label htmlFor="rename">
+                    {i18next.t('nameOfChannel')}
+                  </label>
+                  {formik.errors.input && formik.touched.input && <div className="invalid-feedback">{formik.errors.input}</div>}
+                </div>
+
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={hide} disabled={formik.isSubmitting}>{i18next.t('cancel')}</button>
