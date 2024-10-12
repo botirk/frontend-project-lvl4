@@ -51,6 +51,7 @@ const LoginInner = () => {
       </h1>
       <div className="form-floating">
         <input
+          id="username"
           autoComplete="off"
           disabled={formik.isSubmitting}
           onChange={formik.handleChange}
@@ -72,6 +73,7 @@ const LoginInner = () => {
           disabled={formik.isSubmitting}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
+          id="password"
           name="password"
           type="password"
           placeholder={i18n.t('password')}

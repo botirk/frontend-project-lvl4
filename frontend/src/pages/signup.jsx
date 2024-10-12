@@ -51,6 +51,7 @@ const SignupInner = () => {
       </h1>
       <div className="form-floating">
         <input
+          id="username"
           autoComplete="off"
           disabled={formik.isSubmitting}
           onChange={formik.handleChange}
@@ -68,6 +69,7 @@ const SignupInner = () => {
       </div>
       <div className="form-floating">
         <input
+          id="password1"
           autoComplete="off"
           disabled={formik.isSubmitting}
           onChange={formik.handleChange}
@@ -85,6 +87,7 @@ const SignupInner = () => {
       </div>
       <div className="form-floating">
         <input
+          id="password2"
           autoComplete="off"
           disabled={formik.isSubmitting}
           onChange={formik.handleChange}
