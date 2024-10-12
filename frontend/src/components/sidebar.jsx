@@ -172,7 +172,7 @@ const Channel = ({ channel }) => {
         {channel.removable && (
         <li>
           <button type="button" className="dropdown-item" onClick={() => setDeleteShown(true)}>
-            {i18next.t('deleteChannel')}
+            {i18next.t('delete')}
           </button>
         </li>
         )}
