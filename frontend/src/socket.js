@@ -12,6 +12,7 @@ import channelsApi from './redux/channels';
 const useSocket = () => {
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log('SOCKET CREATED');
     const socket = io();
     socket.on('newMessage', (payload) => { // => { body: "new message", channelId: 7, id: 8, username: "admin" }
       dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (messages) => {
@@ -31,12 +32,12 @@ const useSocket = () => {
       }));
     });
     socket.on('removeChannel', (payload) => { // { id: 6 };
-      dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (channels) => { // eslint-disable-line
+      dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (channels) => {
         delete channels.entities[payload.id];
         const i = channels.ids.indexOf(payload.id);
         if (i >= 0) channels.ids.splice(i, 1);
       }));
-      dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (messages) => { // eslint-disable-line
+      dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (messages) => {
         for (let i = 0; i < messages.ids.length; i += 1) { // eslint-disable-line
           const id = messages.ids[i];
           const message = messages.entities[id];
