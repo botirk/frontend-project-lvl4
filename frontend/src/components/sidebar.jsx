@@ -93,10 +93,7 @@ const ChannelRenameModal = ({
                     type="text"
                     name="input"
                     onBlur={formik.handleBlur}
-                    onChange={(e) => {
-                      e.target.value = filter(e.target.value);
-                      formik.handleChange(e);
-                    }}
+                    onChange={formik.handleChange}
                     value={formik.values.input}
                     className={classNames('form-control', { 'is-invalid': formik.touched.input && formik.errors.input })}
                   />
@@ -137,7 +134,7 @@ const ChannelAdd = () => {
         name={i18next.t('addingChannel')}
         startingValue=""
         hide={() => setShown(false)}
-        onSubmit={({ input }) => addChannel(input).unwrap()}
+        onSubmit={({ input }) => addChannel(filter(input)).unwrap()}
       />
       )}
     </>
@@ -178,7 +175,7 @@ const Channel = ({ channel }) => {
         </li>
         )}
       </ul>
-      {isRenameShown && <ChannelRenameModal name={i18next.t('renameChannel')} hide={() => setRenameShown(false)} startingValue={channel.name} onSubmit={({ input }) => renameChannel([channel.id, input]).unwrap()} />}
+      {isRenameShown && <ChannelRenameModal name={i18next.t('renameChannel')} hide={() => setRenameShown(false)} startingValue={channel.name} onSubmit={({ input }) => renameChannel([channel.id, filter(input)]).unwrap()} />}
       {isDeleteShown && <ChannelDeleteModal hide={() => setDeleteShown(false)} channel={channel} />}
     </div>
   );
