@@ -67,7 +67,7 @@ const ChannelRenameModal = ({
   });
   useEffect(() => {
     const cb = async (e) => {
-      if (e.code === 'Enter') formik.submitForm();
+      if (e.code === 'Enter' && !formik.isSubmitting) formik.submitForm();
     };
     document.addEventListener('keyup', cb);
     return () => document.removeEventListener('keyup', cb);

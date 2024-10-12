@@ -12,7 +12,6 @@ import channelsApi from './redux/channels';
 const useSocket = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log('SOCKET CREATED');
     const socket = io();
     socket.on('newMessage', (payload) => { // => { body: "new message", channelId: 7, id: 8, username: "admin" }
       dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (messages) => {
