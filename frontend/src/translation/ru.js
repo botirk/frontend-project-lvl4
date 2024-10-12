@@ -32,7 +32,7 @@ const t = {
     suchChannelAlreadyExists: 'Такой канал уже существует',
     cantSendEmptyMessages: 'Нельзя отправлять пустые сообщения',
     wrongLoginPassword: 'Неверная пара имя пользователя/пароль',
-    message: 'Сообщение',
+    message: 'Новое сообщение',
     browserError: 'Ошибка браузера',
     channelDeleted: 'Канал удалён',
     channelCreated: 'Канал создан',

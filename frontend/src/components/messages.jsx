@@ -44,6 +44,7 @@ export const Input = () => {
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values.input}
+        aria-label={i18next.t('message')}
       />
       <button disabled={formik.isSubmitting} type="submit" className="btn btn-primary">
         {i18next.t('send')}
