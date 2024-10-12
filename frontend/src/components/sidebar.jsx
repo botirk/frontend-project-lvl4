@@ -41,7 +41,7 @@ const ChannelDeleteModal = ({ channel, hide }) => {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={hide} disabled={result.isLoading}>{i18next.t('cancel')}</button>
-              <button type="button" className="btn btn-primary" onClick={async () => { if (!(await deleteChannel(channel.id)).error) hide(); }} disabled={result.isLoading}>{i18next.t('sure?')}</button>
+              <button type="button" className="btn btn-danger" onClick={async () => { if (!(await deleteChannel(channel.id)).error) hide(); }} disabled={result.isLoading}>{i18next.t('sure?')}</button>
             </div>
           </div>
         </div>
