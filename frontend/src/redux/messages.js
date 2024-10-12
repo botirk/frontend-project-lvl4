@@ -1,6 +1,4 @@
 /* eslint-disable
-functional/no-expression-statement,
-functional/no-conditional-statement,
 no-param-reassign */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { onQueryStartedErrorToast } from '../utils';

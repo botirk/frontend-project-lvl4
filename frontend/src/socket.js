@@ -1,6 +1,4 @@
 /* eslint-disable
-functional/no-expression-statement,
-functional/no-conditional-statement,
 no-param-reassign */
 import { io } from 'socket.io-client';
 import { useDispatch } from 'react-redux';

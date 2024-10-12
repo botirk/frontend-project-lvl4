@@ -1,6 +1,4 @@
 /* eslint-disable
-functional/no-expression-statement,
-functional/no-conditional-statement,
 no-param-reassign */
 import i18n from 'i18next';
 import { useDispatch } from 'react-redux';

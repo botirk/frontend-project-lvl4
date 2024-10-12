@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-expression-statement, functional/no-conditional-statement */
 import i18next from 'i18next';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';

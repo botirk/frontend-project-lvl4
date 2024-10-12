@@ -1,6 +1,4 @@
 /* eslint-disable
-functional/no-expression-statement,
-functional/no-conditional-statement,
 no-param-reassign */
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';

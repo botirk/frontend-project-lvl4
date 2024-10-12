@@ -1,6 +1,4 @@
 /* eslint-disable
-functional/no-expression-statement,
-functional/no-conditional-statement,
 no-param-reassign */
 import { Navigate } from 'react-router-dom';
 import { useIsLogin } from '../redux/auth';

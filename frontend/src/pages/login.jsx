@@ -1,6 +1,4 @@
 /* eslint-disable
-functional/no-expression-statement,
-functional/no-conditional-statement,
 no-param-reassign */
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';

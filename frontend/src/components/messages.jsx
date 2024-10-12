@@ -1,6 +1,4 @@
 /* eslint-disable
-functional/no-expression-statement,
-functional/no-conditional-statement,
 no-param-reassign */
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
