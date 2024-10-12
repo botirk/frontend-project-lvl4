@@ -35,10 +35,8 @@ const LoginInner = () => {
     }).catch((e) => {
       console.error(e);
       if (e.status < 500) {
-        toast(i18n.t('failedLoginPassword'));
         setError(i18n.t('failedLoginPassword'));
       } else {
-        toast(i18n.t('networkErrorAfterAuth'));
         setError(i18n.t('networkErrorAfterAuth'));
       }
     }),

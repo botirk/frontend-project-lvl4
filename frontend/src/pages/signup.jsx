@@ -35,10 +35,8 @@ const SignupInner = () => {
     }).catch((e) => {
       console.error(e);
       if (e.status === 409) {
-        toast(i18next.t('nickTaken'));
         setError(i18next.t('nickTaken'));
       } else {
-        toast(i18next.t('browserError'));
         setError(i18next.t('browserError'));
       }
     }),
