@@ -189,7 +189,7 @@ const Sidebar = () => {
   const sidebar = useSelector((state) => state.chat.sidebar);
 
   return (
-    <ProSidebar style={{ height: '100vh' }} hidden={!sidebar && !big}>
+    <ProSidebar hidden={!sidebar && !big}>
       {!channels && <div className="spinner-border" role="status" />}
       {channels && (
         <>
