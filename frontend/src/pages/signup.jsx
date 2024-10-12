@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
-import { toast } from 'react-toastify';
 import { makeFullScreen } from '../utils';
 import { login as loginAction } from '../redux/auth';
 

@@ -11,7 +11,6 @@ import axios from 'axios';
 import classnames from 'classnames';
 
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
 import { makeFullScreen } from '../utils';
 import { login as loginAction } from '../redux/auth';
 
