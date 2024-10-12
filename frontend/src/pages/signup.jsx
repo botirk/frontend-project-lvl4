@@ -24,7 +24,7 @@ const SignupInner = () => {
     validationSchema: Yup.object({
       username: Yup.string().required(i18next.t('required')).min(3, i18next.t('from3SymbolsUpTo20Symbols')).max(21, i18next.t('from3SymbolsUpTo20Symbols')),
       password1: Yup.string().required(i18next.t('required')).min(6, i18next.t('from6Symbols')),
-      password2: Yup.string().required(i18next.t('required')).min(6, i18next.t('from6Symbols')).test('match', i18next.t('twoPasswordMustBeSame'), (value) => value === formik.values.password1),
+      password2: Yup.string().required(i18next.t('required')).test('match', i18next.t('twoPasswordMustBeSame'), (value) => value === formik.values.password1),
     }),
     onSubmit: (form) => axios.post('/api/v1/signup', { username: form.username, password: form.password1 }).then((result) => {
       const { username, token } = result.data;
