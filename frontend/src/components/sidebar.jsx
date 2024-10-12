@@ -142,7 +142,7 @@ const ChannelAdd = () => {
 };
 
 const Channel = ({ channel }) => {
-  const selectedChannel = useSelector((state) => state.chat.selectedChannel);
+  const selectedChannel = (useSelector((state) => state.chat.selectedChannel) === channel.id);
   const dispatch = useDispatch();
   const [isRenameShown, setRenameShown] = useState(false);
   const [isDeleteShown, setDeleteShown] = useState(false);
@@ -152,8 +152,8 @@ const Channel = ({ channel }) => {
     <div className="btn-group mt-1 w-100">
       <button
         type="button"
-        className="w-100 rounded-0 text-start text-truncate btn btn-secondary"
-        disabled={selectedChannel === channel.id}
+        className={classNames('w-100 rounded-0 text-start text-truncate btn', { 'btn-secondary': selectedChannel })}
+        disabled={selectedChannel}
         onClick={() => dispatch(selectChannel(channel.id))}
       >
         #
