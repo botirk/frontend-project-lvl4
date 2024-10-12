@@ -3,7 +3,7 @@ const t = {
     logout: 'Выйти',
     networkErrorAfterAuth: 'Сетевая ошибка при попытке авторизоваться',
     failedLoginPassword: 'Неверные имя пользователя или пароль',
-    addingChannel: 'Добавление канала',
+    addingChannel: '+',
     nameOfChannel: 'Наименование канала',
     addChannel: 'Отправить',
     send: 'Отправить',
