@@ -11,7 +11,7 @@ const useSocket = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const socket = io();
-    socket.on('newMessage', (payload) => { // => { body: "new message", channelId: 7, id: 8, username: "admin" }
+    socket.on('newMessage', (payload) => { // => { body: "new message", channel: 7, id: 8, username: "admin" }
       dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (messages) => {
         messages.ids.push(payload.id);
         messages.entities[payload.id] = payload;
@@ -38,9 +38,9 @@ const useSocket = () => {
         for (let i = 0; i < messages.ids.length; i += 1) { // eslint-disable-line
           const id = messages.ids[i];
           const message = messages.entities[id];
-          if (message.channeld === payload.id) {
-            messages.ids.splice(i);
-            delete messages.channels[id];
+          if (message.channel === payload.id) {
+            messages.ids.splice(i, 1);
+            delete messages.entities[id];
             i -= 1;
           }
         }

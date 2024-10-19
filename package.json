@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "0.0.1",
-  "description": "",
+  "description": "Educational project: online chat",
   "type": "module",
   "main": "src/init.jsx",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "author": "botirk",
   "license": "ISC",
-  "homepage": "",
+  "homepage": "https://frontend-project-lvl4-ifw0.onrender.com/",
   "dependencies": {
     "@hexlet/chat-server": "^2.0.4"
   }

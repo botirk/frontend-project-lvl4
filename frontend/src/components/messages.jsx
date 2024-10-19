@@ -9,7 +9,7 @@ import { useEffect, useRef } from 'react';
 import { useGetMessagesQuery, usePostMessageMutation } from '../redux/messages';
 import filter from '../filter';
 
-export const Input = () => {
+const Input = () => {
   const selectedChannel = useSelector((state) => state.chat.selectedChannel);
   const username = useSelector((state) => state.auth.username);
 
@@ -25,7 +25,9 @@ export const Input = () => {
     onSubmit: ({ input: body }) => message([selectedChannel, username, filter(body)])
       .then(() => formik.resetForm())
       .finally(() => (new Promise(setTimeout, 100))
-        .then(() => { if (ref.current) ref.current.focus(); })),
+        .then(() => {
+          if (ref.current) ref.current.focus();
+        })),
   });
 
   return (
@@ -63,14 +65,23 @@ const Message = ({ message }) => (
 const Messages = () => {
   const { data: messages } = useGetMessagesQuery();
   const selectedChannel = useSelector((state) => state.chat.selectedChannel);
+  const lastRef = useRef();
+  const lastMessage = messages?.entities[messages?.ids[(messages?.ids.length || 1) - 1]];
+  useEffect(() => {
+    if (lastMessage?.channel === selectedChannel && lastRef.current) lastRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [lastMessage, selectedChannel]);
 
   return (
-    <div className="overflow-y-auto">
-      {!messages && <div className="spinner-border" role="status" />}
-      {messages && Object.values(messages.entities)
-        .filter((message) => message.channel === selectedChannel).map((message) => (
-          <Message key={message.id} message={message} />
-        ))}
+    <div className="d-flex flex-column justify-content-between h-100 w-100 p-1">
+      <div className="overflow-y-auto">
+        {!messages && <div className="spinner-border" role="status" />}
+        {messages && Object.values(messages.entities)
+          .filter((message) => message.channel === selectedChannel).map((message) => (
+            <Message key={message.id} message={message} />
+          ))}
+        <div ref={lastRef} />
+      </div>
+      <Input />
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { makeFullScreen, useWindowBig } from '../utils';
 import useSocket from '../socket';
 import MySidebar from '../components/sidebar';
-import Messages, { Input } from '../components/messages';
+import Messages from '../components/messages';
 
 const Chat = () => {
   const ref = useRef();
@@ -25,12 +25,7 @@ const Chat = () => {
   return (
     <div ref={ref} className="d-flex">
       <MySidebar />
-      {(!sidebar || big) && (
-        <div className="d-flex flex-column justify-content-between h-100 w-100">
-          <Messages />
-          <Input />
-        </div>
-      )}
+      {(!sidebar || big) && <Messages />}
     </div>
   );
 };
