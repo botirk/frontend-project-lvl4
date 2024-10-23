@@ -11,7 +11,7 @@ import { Sidebar as ProSidebar } from 'react-pro-sidebar';
 import {
   useAddChannelMutation, useDeleteChannelMutation, useGetChannelsQuery, useRenameChannelMutation,
 } from '../redux/channels';
-import { selectChannel } from '../redux/chat';
+import { selectChannel, selectedChannelSelector, sidebarSelector } from '../redux/chat';
 import filter from '../filter';
 import { useWindowBig } from '../utils';
 
@@ -140,7 +140,7 @@ const ChannelAdd = () => {
 };
 
 const Channel = ({ channel }) => {
-  const selectedChannel = (useSelector((state) => state.chat.selectedChannel) === channel.id);
+  const selectedChannel = useSelector(selectedChannelSelector) === channel.id;
   const dispatch = useDispatch();
   const [isRenameShown, setRenameShown] = useState(false);
   const [isDeleteShown, setDeleteShown] = useState(false);
@@ -186,7 +186,7 @@ const Channel = ({ channel }) => {
 const Sidebar = () => {
   const { data: channels } = useGetChannelsQuery();
   const big = useWindowBig();
-  const sidebar = useSelector((state) => state.chat.sidebar);
+  const sidebar = useSelector(sidebarSelector);
 
   return (
     <ProSidebar hidden={!sidebar && !big}>

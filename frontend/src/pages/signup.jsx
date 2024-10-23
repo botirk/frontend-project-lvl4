@@ -24,10 +24,7 @@ const SignupInner = () => {
       password2: Yup.string().required(i18next.t('required')).test('match', i18next.t('twoPasswordMustBeSame'), (value) => value === formik.values.password1),
     }),
     onSubmit: (form) => axios.post('/api/v1/signup', { username: form.username, password: form.password1 }).then((result) => {
-      const { username, token } = result.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('username', username);
-      dispatch(loginAction({ token, username }));
+      dispatch(loginAction(result.data));
       nav('/');
     }).catch((e) => {
       console.error(e);

@@ -23,4 +23,8 @@ const slice = createSlice({
 
 export const { selectChannel, toggleSidebar } = slice.actions;
 
+export const selectedChannelSelector = (state) => state.chat.selectedChannel;
+
+export const sidebarSelector = (state) => state.chat.sidebar;
+
 export default slice.reducer;

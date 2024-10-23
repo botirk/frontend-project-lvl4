@@ -34,7 +34,13 @@ const init = async () => {
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(
     <React.StrictMode>
-      <RollbarProvider config={{ accessToken: '8adf7b0691044387ac041bd7966d7ec7', captureUncaught: true, captureUnhandledRejections: true }}>
+      <RollbarProvider
+        config={{
+          accessToken: process.env.ROLLBAR,
+          captureUncaught: true,
+          captureUnhandledRejections: true,
+        }}
+      >
         <ErrorBoundary>
           <Provider store={store()}>
             <BrowserRouter>

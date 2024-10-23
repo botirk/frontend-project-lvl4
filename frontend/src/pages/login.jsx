@@ -24,10 +24,7 @@ const LoginInner = () => {
       password: Yup.string().required(i18n.t('required')),
     }),
     onSubmit: (form) => axios.post('/api/v1/login', { username: form.username, password: form.password }).then((result) => {
-      const { username, token } = result.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('username', username);
-      dispatch(loginAction({ token, username }));
+      dispatch(loginAction(result.data));
       nav('/');
     }).catch((e) => {
       console.error(e);

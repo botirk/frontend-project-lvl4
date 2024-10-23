@@ -9,6 +9,8 @@ const slice = createSlice({
   reducers: {
     login(state, action) {
       const { username, token } = action.payload;
+      localStorage.setItem('username', username);
+      localStorage.setItem('token', token);
       state.username = username;
       state.token = token;
     },
@@ -27,5 +29,7 @@ export const useIsLogin = () => {
   const { username, token } = useSelector((state) => state.auth);
   return !!username && !!token;
 };
+
+export const usernameSelector = (state) => state.auth.username;
 
 export default slice.reducer;

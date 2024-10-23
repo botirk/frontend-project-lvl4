@@ -8,10 +8,12 @@ import { useEffect, useRef } from 'react';
 
 import { useGetMessagesQuery, usePostMessageMutation } from '../redux/messages';
 import filter from '../filter';
+import { selectedChannelSelector } from '../redux/chat';
+import { usernameSelector } from '../redux/auth';
 
 const Input = () => {
-  const selectedChannel = useSelector((state) => state.chat.selectedChannel);
-  const username = useSelector((state) => state.auth.username);
+  const selectedChannel = useSelector(selectedChannelSelector);
+  const username = useSelector(usernameSelector);
 
   const ref = useRef();
   useEffect(() => { if (ref.current) ref.current.focus(); }, []);
@@ -64,7 +66,7 @@ const Message = ({ message }) => (
 
 const Messages = () => {
   const { data: messages } = useGetMessagesQuery();
-  const selectedChannel = useSelector((state) => state.chat.selectedChannel);
+  const selectedChannel = useSelector(selectedChannelSelector);
   const lastRef = useRef();
   const lastMessage = messages?.entities[messages?.ids[(messages?.ids.length || 1) - 1]];
   useEffect(() => {

@@ -7,6 +7,7 @@ import { makeFullScreen, useWindowBig } from '../utils';
 import useSocket from '../socket';
 import MySidebar from '../components/sidebar';
 import Messages from '../components/messages';
+import { sidebarSelector } from '../redux/chat';
 
 const Chat = () => {
   const ref = useRef();
@@ -20,7 +21,7 @@ const Chat = () => {
   }, []);
   useSocket();
   const big = useWindowBig();
-  const sidebar = useSelector((state) => state.chat.sidebar);
+  const sidebar = useSelector(sidebarSelector);
 
   return (
     <div ref={ref} className="d-flex">
