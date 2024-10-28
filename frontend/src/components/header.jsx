@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logout, useIsLogin } from '../redux/auth';
 import { useWindowBig } from '../utils';
 import { toggleSidebar } from '../redux/chat';
+import routes from '../routes';
 
 const Header = () => {
   const isLogin = useIsLogin();
@@ -26,11 +27,11 @@ const Header = () => {
               </svg>
             </button>
           )}
-          <Link className="navbar-brand" to="/">Hexlet Chat</Link>
+          <Link className="navbar-brand" to={routes.index}>{i18n.t('app')}</Link>
         </div>
         {isLogin
           ? <button type="button" onClick={() => dispatch(logout())} className="btn btn-primary">{i18n.t('logout')}</button>
-          : <button type="button" onClick={() => nav('/login')} className="btn btn-primary">{i18n.t('login')}</button>}
+          : <button type="button" onClick={() => nav(routes.login)} className="btn btn-primary">{i18n.t('login')}</button>}
       </div>
     </nav>
   );

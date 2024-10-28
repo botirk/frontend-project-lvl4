@@ -1,5 +1,6 @@
 const t = {
   translation: {
+    app: 'Hexlet Chat',
     logout: 'Выйти',
     networkErrorAfterAuth: 'Сетевая ошибка при попытке авторизоваться',
     failedLoginPassword: 'Неверные имя пользователя или пароль',

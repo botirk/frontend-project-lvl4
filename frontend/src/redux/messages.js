@@ -2,11 +2,12 @@
 no-param-reassign */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { onQueryStartedErrorToast } from '../utils';
+import routes from '../routes';
 
 const messagesApi = createApi({
   reducerPath: 'messages',
   baseQuery: fetchBaseQuery({
-    baseUrl: '/api/v1/messages',
+    baseUrl: routes.apiMessages,
     prepareHeaders: (headers, { getState }) => {
       const { token } = getState().auth;
       if (token) headers.set('authorization', `Bearer ${token}`);

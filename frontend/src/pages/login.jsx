@@ -11,6 +11,7 @@ import classnames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { makeFullScreen } from '../utils';
 import { login as loginAction } from '../redux/auth';
+import routes from '../routes';
 
 const LoginInner = () => {
   const nav = useNavigate();
@@ -23,9 +24,12 @@ const LoginInner = () => {
       username: Yup.string().required(i18n.t('required')),
       password: Yup.string().required(i18n.t('required')),
     }),
-    onSubmit: (form) => axios.post('/api/v1/login', { username: form.username, password: form.password }).then((result) => {
+    onSubmit: (form) => axios.post(
+      routes.apiLogin,
+      { username: form.username, password: form.password },
+    ).then((result) => {
       dispatch(loginAction(result.data));
-      nav('/');
+      nav(routes.index);
     }).catch((e) => {
       console.error(e);
       if (e.status < 500) {
@@ -85,7 +89,7 @@ const LoginInner = () => {
         <span className="small mb-2">
           {i18n.t('noAccount?')}
         </span>
-        <Link to="/signup">
+        <Link to={routes.signup}>
           {i18n.t('registration')}
         </Link>
       </div>

@@ -5,11 +5,12 @@ import i18next from 'i18next';
 import { toast } from 'react-toastify';
 import { selectChannel } from './chat';
 import { onQueryStartedErrorToast } from '../utils';
+import routes from '../routes';
 
 const channelsApi = createApi({
   reducerPath: 'channels',
   baseQuery: fetchBaseQuery({
-    baseUrl: '/api/v1/channels',
+    baseUrl: routes.apiChannels,
     prepareHeaders: (headers, { getState }) => {
       const { token } = getState().auth;
       if (token) headers.set('authorization', `Bearer ${token}`);

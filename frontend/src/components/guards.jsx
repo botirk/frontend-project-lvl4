@@ -2,11 +2,12 @@
 no-param-reassign */
 import { Navigate } from 'react-router-dom';
 import { useIsLogin } from '../redux/auth';
+import routes from '../routes';
 
 export const ChatGuard = ({ children }) => {
   const isLogin = useIsLogin();
 
-  if (!isLogin) return <Navigate to="/login" />;
+  if (!isLogin) return <Navigate to={routes.login} />;
   return children;
 };
 

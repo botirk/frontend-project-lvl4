@@ -11,6 +11,7 @@ import axios from 'axios';
 
 import { makeFullScreen } from '../utils';
 import { login as loginAction } from '../redux/auth';
+import routes from '../routes';
 
 const SignupInner = () => {
   const nav = useNavigate();
@@ -23,9 +24,12 @@ const SignupInner = () => {
       password1: Yup.string().required(i18next.t('required')).min(6, i18next.t('from6Symbols')),
       password2: Yup.string().required(i18next.t('required')).test('match', i18next.t('twoPasswordMustBeSame'), (value) => value === formik.values.password1),
     }),
-    onSubmit: (form) => axios.post('/api/v1/signup', { username: form.username, password: form.password1 }).then((result) => {
+    onSubmit: (form) => axios.post(
+      routes.apiSignup,
+      { username: form.username, password: form.password1 },
+    ).then((result) => {
       dispatch(loginAction(result.data));
-      nav('/');
+      nav(routes.index);
     }).catch((e) => {
       console.error(e);
       if (e.status === 409) {

@@ -20,6 +20,7 @@ import { ChatGuard, LoginGuard, SignupGuard } from './components/guards';
 import Signup from './pages/signup';
 import translation from './translation';
 import { filterInit } from './filter';
+import routes from './routes';
 
 const init = async () => {
   filterInit();
@@ -47,9 +48,9 @@ const init = async () => {
               <ToastContainer />
               <Header />
               <Routes>
-                <Route path="/" element={<ChatGuard><Chat /></ChatGuard>} />
-                <Route path="login" element={<LoginGuard><Login /></LoginGuard>} />
-                <Route path="signup" element={<SignupGuard><Signup /></SignupGuard>} />
+                <Route path={routes.index} element={<ChatGuard><Chat /></ChatGuard>} />
+                <Route path={routes.login} element={<LoginGuard><Login /></LoginGuard>} />
+                <Route path={routes.signup} element={<SignupGuard><Signup /></SignupGuard>} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </BrowserRouter>
